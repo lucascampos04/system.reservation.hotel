@@ -8,6 +8,8 @@ public class HotelReservationSystemApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HotelReservationSystemApplication.class, args);
+        System.out.println("Router Default Client : http://localhost:1234/api/v1/clientes/ ");
+        System.out.println("Router Default Employees : http://localhost:1234/api/v1/employees/ ");
     }
 
 }
