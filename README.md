@@ -1,3 +1,3 @@
-# Welcome to Our Project 
+# Welcome to Our Project 🔆
 
-This project is still in development
+This project is still in development ⌛🖊️
