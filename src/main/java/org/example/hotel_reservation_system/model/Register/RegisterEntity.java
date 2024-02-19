@@ -1,6 +1,8 @@
-package org.example.hotel_reservation_system.model.Employees;
+package org.example.hotel_reservation_system.model.Register;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
@@ -10,10 +12,14 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 
 @Entity
-public class RegisterEntity extends BaseEntity {
+@Getter
+@Setter
+@Table(name = "register")
+public class RegisterEntity{
 
     @Id
-    private String Id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
     @Column(name = "inicio_checkin")
     private LocalDateTime inicio_checkin;
     @Column(name = "final_checkin")
@@ -38,23 +44,4 @@ public class RegisterEntity extends BaseEntity {
     @ManyToOne
     private ClientesEntity clientesEntity;
 
-    @Override
-    public LocalDateTime getDataRegistro() {
-        return data_registro;
-    }
-
-    @Override
-    public void setDataRegistro(LocalDateTime dataRegistro) {
-        this.data_registro = dataRegistro;
-    }
-
-    @Override
-    public String getId() {
-        return Id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.Id = id;
-    }
 }
