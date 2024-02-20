@@ -1,20 +1,27 @@
-package org.example.hotel_reservation_system.model.Clientes;
+package org.example.hotel_reservation_system.model.Employees;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
+import org.example.hotel_reservation_system.Enum.Contratos.ContratosEmployees;
+import org.example.hotel_reservation_system.Enum.Status.StatusEmployees;
 import org.hibernate.annotations.ColumnDefault;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "funcionarios")
 @Getter
 @Setter
-@Table(name = "clientes")
-public class ClientesEntity{
+public class EmployeesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
@@ -52,8 +59,23 @@ public class ClientesEntity{
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'DESATIVADO'")
-    private StatusEnum status;
+    private StatusEmployees status;
+
+    @Column(name = "cargo")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'DESATIVADO'")
+    private CargoEmployees cargo;
+    
+    @Column(name = "contrato")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'Um Ano'")
+    private ContratosEmployees contratos;
 
     @Column(name = "data_registro")
     private LocalDateTime data_registro;
+
+    @Column(name = "salario")
+    private Double salario;
+
+    
 }
