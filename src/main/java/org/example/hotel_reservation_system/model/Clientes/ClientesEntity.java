@@ -47,7 +47,7 @@ public class ClientesEntity{
     private String pais;
 
     @Column(name = "data_nascimento")
-    private LocalDate dataNascimeo; 
+    private String data_nascimento;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
