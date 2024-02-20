@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
-import org.example.hotel_reservation_system.util.BaseEntity;
+import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -41,7 +41,10 @@ public class RegisterEntity{
 
     @Column(name = "data_registro")
     private LocalDateTime data_registro;
+    
     @ManyToOne
     private ClientesEntity clientesEntity;
 
+    @ManyToOne
+    private EmployeesEntity employeesEntity;
 }
