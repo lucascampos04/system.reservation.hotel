@@ -46,5 +46,6 @@ public class RegisterEntity{
     private ClientesEntity clientesEntity;
 
     @ManyToOne
+    @JoinColumn(name = "employees_entity_id")
     private EmployeesEntity employeesEntity;
 }
