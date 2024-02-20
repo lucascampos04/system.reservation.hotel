@@ -18,7 +18,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "funcionarios")
+@Entity(name = "employees")
 @Getter
 @Setter
 public class EmployeesEntity {
