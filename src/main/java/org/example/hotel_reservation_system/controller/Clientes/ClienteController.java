@@ -21,4 +21,9 @@ public class ClienteController {
         }
         return null;
     }
+
+    @PatchMapping("/add/clientes")  
+    public ResponseEntity<String> atualizarCliente(@RequestBody ClientesDto clientesDto){
+        return null;
+    }
 }
