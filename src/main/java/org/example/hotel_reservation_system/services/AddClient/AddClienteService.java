@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 @Service
 public class AddClienteService {
@@ -20,9 +21,14 @@ public class AddClienteService {
     public ResponseEntity<String> AdicionarCliente(ClientesDto clientesDto){
         try {
             String messageErroValidationField = verificarCampoExistente(clientesDto);
+            String validarCampos = validarCamposPattern(clientesDto);
 
             if (messageErroValidationField != null){
                 return ResponseEntity.badRequest().body("Error : " + messageErroValidationField);
+            }
+
+            if (validarCampos != null){
+                return ResponseEntity.badRequest().body("Error : " + validarCampos);
             }
 
             ClientesEntity clientesEntity = getDads(clientesDto);
@@ -32,6 +38,18 @@ public class AddClienteService {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao inserir cliente");
         }
+    }
+
+    private String validarCamposPattern(ClientesDto clientesDto){
+
+        if (containsWhitespace((clientesDto.getEmail()))){
+            return "O Email não pode conter espaços";
+        }
+        return null;
+    }
+
+    private boolean containsWhitespace(String value) {
+        return value != null && value.contains(" ");
     }
 
     private String verificarCampoExistente(ClientesDto clientesDto){
