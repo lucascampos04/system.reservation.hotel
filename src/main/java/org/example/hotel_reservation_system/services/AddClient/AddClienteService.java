@@ -51,13 +51,20 @@ public class AddClienteService {
         if (!isValidRg(clientesDto.getRg())) {
             return "RG inválido";
         }
+
+        if (!isValidName(clientesDto.getNome())) {
+            return "Nome inválido";
+        }
+
+        if (!isValidStatus(clientesDto.getStatus().toString())) {
+            return "Status inválido";
+        }
         return null;
     }
 
     private boolean containsWhitespace(String value) {
         return value != null && value.contains(" ");
     }
-
     private boolean isValidCpf(String cpf){
         String cpfRegex = "^\\d{11}$";
         return cpf != null && cpf.matches(cpfRegex);
@@ -66,6 +73,17 @@ public class AddClienteService {
         String rgRegex = "^[0-9]{1,2}.?[0-9]{3}.?[0-9]{3}-?[0-9Xx]$";
         return rg != null && rg.matches(rgRegex);
     }
+    private boolean isValidName(String name){
+        String nameRegex = "^[a-zA-Z]";
+        return name!= null && name.matches(nameRegex);
+    }
+    private boolean isValidStatus(String status){
+        if (status.equals("ATIVO") || status.equals("DESATIVADO")){
+            return true;
+        }
+        return false;
+    }
+
     private String verificarCampoExistente(ClientesDto clientesDto){
         if (emailExist(clientesDto.getEmail())){
             return "Email já está em uso";
@@ -92,7 +110,7 @@ public class AddClienteService {
         return clientesRepository.existsByRg(rg);
     }
 
-
+    
 
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
