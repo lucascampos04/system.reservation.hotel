@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 @Service
 public class AddClienteService {
@@ -41,9 +40,16 @@ public class AddClienteService {
     }
 
     private String validarCamposPattern(ClientesDto clientesDto){
-
-        if (containsWhitespace((clientesDto.getEmail()))){
+        if (containsWhitespace(clientesDto.getEmail())) {
             return "O Email não pode conter espaços";
+        }
+
+        if (!isValidCpf(clientesDto.getCpf())) {
+            return "CPF inválido";
+        }
+
+        if (!isValidRg(clientesDto.getRg())) {
+            return "RG inválido";
         }
         return null;
     }
@@ -52,6 +58,14 @@ public class AddClienteService {
         return value != null && value.contains(" ");
     }
 
+    private boolean isValidCpf(String cpf){
+        String cpfRegex = "^\\d{11}$";
+        return cpf != null && cpf.matches(cpfRegex);
+    }
+    private boolean isValidRg(String rg){
+        String rgRegex = "^[0-9]{1,2}.?[0-9]{3}.?[0-9]{3}-?[0-9Xx]$";
+        return rg != null && rg.matches(rgRegex);
+    }
     private String verificarCampoExistente(ClientesDto clientesDto){
         if (emailExist(clientesDto.getEmail())){
             return "Email já está em uso";
@@ -97,10 +111,4 @@ public class AddClienteService {
         clientes.setData_nascimento(clientesDto.getData_nascimento());
         return clientes;
     }
-
-
-
-
-
-
 }
