@@ -15,7 +15,6 @@ import lombok.Setter;
 @Table(name = "clientes")
 public class ClientesEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
     @Column(name = "nome")

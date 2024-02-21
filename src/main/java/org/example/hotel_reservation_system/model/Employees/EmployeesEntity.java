@@ -54,7 +54,7 @@ public class EmployeesEntity {
     private String pais;
 
     @Column(name = "data_nascimento")
-    private LocalDate dataNascimeo; 
+    private String dataNascimeo; 
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -76,6 +76,43 @@ public class EmployeesEntity {
 
     @Column(name = "salario")
     private Double salario;
+
+    public EmployeesEntity(Long id, 
+        String nome, 
+        String email, 
+        String cpf, 
+        String rg, 
+        String dataNascimeo, 
+        StatusEmployees status, 
+        CargoEmployees cargo, 
+        LocalDateTime data_registro, 
+        Double salario,
+        String cep,
+        String numero,
+        String estado,
+        String pais,
+        String endereco) {
+            this.Id = id;
+            this.nome = nome;
+            this.email = email;
+            this.cpf = cpf;
+            this.rg = rg;
+            this.dataNascimeo = dataNascimeo;
+            this.status = status;
+            this.cargo = cargo;
+            this.data_registro = data_registro;
+            this.salario = salario;
+            this.cep = cep;
+            this.numero = numero;
+            this.estado = estado;
+            this.pais = pais;
+            this.endereco = endereco;
+    }
+
+    public EmployeesEntity() {
+        
+    }
+
 
     
 }
