@@ -1,6 +1,5 @@
 package org.example.hotel_reservation_system.model.Clientes;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;

@@ -17,6 +17,7 @@ public class AddClienteService {
         this.clientesRepository = clientesRepository;
     }
 
+    @SuppressWarnings("null")
     public ResponseEntity<String> AdicionarCliente(ClientesDto clientesDto){
         try {
             String messageErroValidationField = verificarCampoExistente(clientesDto);
