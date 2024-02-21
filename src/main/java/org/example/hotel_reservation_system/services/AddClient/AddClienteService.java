@@ -6,7 +6,6 @@ import org.example.hotel_reservation_system.repository.Clientes.ClientesReposito
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 
 @Service
@@ -20,8 +19,10 @@ public class AddClienteService {
 
     public ResponseEntity<String> AdicionarCliente(ClientesDto clientesDto){
         try {
-            if (emailExist(clientesDto.getEmail())){
-                return ResponseEntity.badRequest().body("Erro : Email Já está em uso");
+            String messageErroValidationField = verificarCampoExistente(clientesDto);
+
+            if (messageErroValidationField != null){
+                return ResponseEntity.badRequest().body("Error : " + messageErroValidationField);
             }
 
             ClientesEntity clientesEntity = getDads(clientesDto);
@@ -33,9 +34,34 @@ public class AddClienteService {
         }
     }
 
+    private String verificarCampoExistente(ClientesDto clientesDto){
+        if (emailExist(clientesDto.getEmail())){
+            return "Email já está em uso";
+        }
+
+        if (cpfExist(clientesDto.getCpf())){
+            return "CPF já está em uso";
+        }
+
+        if (rgExist(clientesDto.getRg())){
+            return "Rg já está em uso";
+        }
+        return null;
+    }
+
     private boolean emailExist(String email){
         return clientesRepository.existsByEmail(email);
     }
+    private boolean cpfExist(String cpf){
+        return clientesRepository.existsByCpf(cpf);
+    }
+
+    private boolean rgExist(String rg){
+        return clientesRepository.existsByRg(rg);
+    }
+
+
+
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
         clientes.setId(clientes.getId());
@@ -51,11 +77,6 @@ public class AddClienteService {
         clientes.setStatus(clientesDto.getStatus());
         clientes.setData_registro(LocalDateTime.now());
         clientes.setData_nascimento(clientesDto.getData_nascimento());
-
-
-
-
-
         return clientes;
     }
 
