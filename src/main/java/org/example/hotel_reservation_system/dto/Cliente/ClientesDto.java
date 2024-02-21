@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,7 +12,6 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link org.example.hotel_reservation_system.model.Clientes.ClientesEntity}
  */
-@Value
 @Getter
 @Setter
 public class ClientesDto implements Serializable {
@@ -28,6 +28,24 @@ public class ClientesDto implements Serializable {
     StatusEnum status;
     LocalDateTime data_registro;
     String data_nascimento;
+
+    public static ClientesDto fromEntity(ClientesEntity entity){
+        return new ClientesDto(
+                entity.getId(),
+                entity.getNome(),
+                entity.getEmail(),
+                entity.getCpf(),
+                entity.getRg(),
+                entity.getEndereco(),
+                entity.getCep(),
+                entity.getData_nascimento(),
+                entity.getNumero(),
+                entity.getEstado(),
+                entity.getPais(),
+                entity.getStatus(),
+                entity.getData_registro()
+        );
+    }
 
     public ClientesDto(Long id,
                        String nome,
