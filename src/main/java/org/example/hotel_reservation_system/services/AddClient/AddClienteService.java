@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 public class AddClienteService {
@@ -60,6 +61,14 @@ public class AddClienteService {
         if (!isValidStatus(clientesDto.getStatus().toString())) {
             return "Status inválido";
         }
+
+        if (!isValidCepf(clientesDto.getCep())){
+            return "CEP inválido";
+        }
+
+        if (!isValidPais(clientesDto.getPais())){
+            return "País inválido";
+        }
         return null;
     }
 
@@ -76,15 +85,20 @@ public class AddClienteService {
     }
     private boolean isValidName(String name){
         String nameRegex = "^[a-zA-Z]";
-        return name!= null && name.matches(nameRegex);
+        return name != null && name.matches(nameRegex);
     }
     private boolean isValidStatus(String status){
-        if (status.equals("ATIVO") || status.equals("DESATIVADO")){
-            return true;
-        }
-        return false;
+        return status.equals("ATIVO") || status.equals("DESATIVADO");
+    }
+    private boolean isValidCepf(String cepf){
+        String cepfRegex = "^[0-9]{8}$";
+        return cepf != null && cepf.matches(cepfRegex);
     }
 
+    private boolean isValidPais(String pais){
+        String paisRegex = "^[a-zA-Z]";
+        return pais != null && pais.matches(paisRegex);
+    }
     private String verificarCampoExistente(ClientesDto clientesDto){
         if (emailExist(clientesDto.getEmail())){
             return "Email já está em uso";
@@ -111,11 +125,21 @@ public class AddClienteService {
         return clientesRepository.existsByRg(rg);
     }
 
+
+
+    private Long generatedIdUnique(){
+        long id = 0;
+        Random random = new Random();
+        do {
+            id = 100000 + random.nextInt(900000);
+        } while (clientesRepository.existsById(id));
+        return id;
+    }
     
 
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
-        clientes.setId(clientes.getId());
+        clientes.setId(generatedIdUnique());
         clientes.setNome(clientesDto.getNome());
         clientes.setEmail(clientesDto.getEmail());
         clientes.setCpf(clientesDto.getCpf());
