@@ -23,10 +23,10 @@ public class ClientesEntity{
     @Column(name = "email")
     private String email;
 
-    @Column(name = "cpf", unique = true)
+    @Column(name = "cpf")
     private String cpf;
 
-    @Column(name = "rg", unique = true)
+    @Column(name = "rg")
     private String rg;
 
     @Column(name = "endereco")
