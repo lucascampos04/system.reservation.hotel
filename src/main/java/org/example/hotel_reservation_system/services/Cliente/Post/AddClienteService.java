@@ -1,4 +1,4 @@
-package org.example.hotel_reservation_system.services.AddClient;
+package org.example.hotel_reservation_system.services.Cliente.Post;
 
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
@@ -62,7 +62,7 @@ public class AddClienteService {
             return "Status inválido";
         }
 
-        if (!isValidCepf(clientesDto.getCep())){
+        if (!isValidCep(clientesDto.getCep())){
             return "CEP inválido";
         }
 
@@ -84,19 +84,19 @@ public class AddClienteService {
         return rg != null && rg.matches(rgRegex);
     }
     private boolean isValidName(String name){
-        String nameRegex = "^[a-zA-Z]";
+        String nameRegex = "[A-Z][a-z].* [A-Z][a-z].*";
         return name != null && name.matches(nameRegex);
     }
     private boolean isValidStatus(String status){
         return status.equals("ATIVO") || status.equals("DESATIVADO");
     }
-    private boolean isValidCepf(String cepf){
-        String cepfRegex = "^[0-9]{8}$";
-        return cepf != null && cepf.matches(cepfRegex);
+    private boolean isValidCep(String cep){
+        String cepfRegex = "^(?=.*\\d)\\d{1,}$";
+        return cep != null && cep.matches(cepfRegex);
     }
 
     private boolean isValidPais(String pais){
-        String paisRegex = "^[a-zA-Z]";
+        String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
         return pais != null && pais.matches(paisRegex);
     }
     private String verificarCampoExistente(ClientesDto clientesDto){
