@@ -1,19 +1,24 @@
 package org.example.hotel_reservation_system.controller.Clientes;
 
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
+import org.example.hotel_reservation_system.services.Cliente.Get.ListAll.ListAllClientesServices;
 import org.example.hotel_reservation_system.services.Cliente.Put.PutCliente;
 import org.example.hotel_reservation_system.services.Cliente.Post.AddClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
 public class ClienteController {
     private final AddClienteService addClienteService;
     private final PutCliente putCliente;
-    public ClienteController(AddClienteService addClienteService, PutCliente putCliente) {
+    private final ListAllClientesServices listAllClientesServices;
+    public ClienteController(AddClienteService addClienteService, PutCliente putCliente, ListAllClientesServices listAllClientesServices) {
         this.addClienteService = addClienteService;
         this.putCliente = putCliente;
+        this.listAllClientesServices = listAllClientesServices;
     }
     @PostMapping("/add/clientes")
     public ResponseEntity<String> cadastrarCliente(@RequestBody ClientesDto clientesDto){
@@ -32,5 +37,11 @@ public class ClienteController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente");
         }
+    }
+
+    @GetMapping("/get/all/clientes")
+    public ResponseEntity<List<ClientesDto>> list(){
+        List<ClientesDto> clientesDtos = listAllClientesServices.listAllClientes();
+        return ResponseEntity.ok().body(clientesDtos);
     }
 }

@@ -2,7 +2,6 @@ package org.example.hotel_reservation_system.dto.Employees;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
 import org.example.hotel_reservation_system.Enum.Contratos.ContratosEmployees;
 import org.example.hotel_reservation_system.Enum.Status.StatusEmployees;

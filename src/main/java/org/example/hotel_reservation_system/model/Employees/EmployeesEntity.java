@@ -1,6 +1,5 @@
 package org.example.hotel_reservation_system.model.Employees;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
