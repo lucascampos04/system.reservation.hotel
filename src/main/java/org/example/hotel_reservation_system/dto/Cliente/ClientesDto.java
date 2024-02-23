@@ -1,8 +1,11 @@
 package org.example.hotel_reservation_system.dto.Cliente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Exception.ClienteNaoAtivoException;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.io.Serializable;
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientesDto implements Serializable {
     Long Id;
     String nome;
@@ -29,21 +33,26 @@ public class ClientesDto implements Serializable {
     String data_nascimento;
 
     public static ClientesDto fromEntity(ClientesEntity entity){
-        return new ClientesDto(
-                entity.getId(),
-                entity.getNome(),
-                entity.getEmail(),
-                entity.getCpf(),
-                entity.getRg(),
-                entity.getEndereco(),
-                entity.getCep(),
-                entity.getData_nascimento(),
-                entity.getNumero(),
-                entity.getEstado(),
-                entity.getPais(),
-                entity.getStatus(),
-                entity.getData_registro()
-        );
+        if (entity.getStatus() == StatusEnum.ATIVO){
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getEmail(),
+                    entity.getCpf(),
+                    entity.getRg(),
+                    entity.getEndereco(),
+                    entity.getCep(),
+                    entity.getData_nascimento(),
+                    entity.getNumero(),
+                    entity.getEstado(),
+                    entity.getPais(),
+                    entity.getStatus(),
+                    entity.getData_registro()
+            );
+        } else {
+            return new ClientesDto(entity.getId(), null, null, null, null, null, null, null, null, null, null, entity.getStatus(), null);
+        }
+
     }
 
     public ClientesDto(Long id,
