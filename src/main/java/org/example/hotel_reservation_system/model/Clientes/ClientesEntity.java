@@ -2,6 +2,7 @@ package org.example.hotel_reservation_system.model.Clientes;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.hibernate.annotations.ColumnDefault;
@@ -54,4 +55,8 @@ public class ClientesEntity{
 
     @Column(name = "data_registro")
     private LocalDateTime data_registro;
+    @JsonIgnore
+    public StatusEnum getStatus() {
+        return status;
+    }
 }
