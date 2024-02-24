@@ -1,11 +1,10 @@
 package org.example.hotel_reservation_system.dto.Cliente;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
-import org.example.hotel_reservation_system.Exception.ClienteNaoAtivoException;
+import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.io.Serializable;
@@ -31,6 +30,8 @@ public class ClientesDto implements Serializable {
     StatusEnum status;
     LocalDateTime data_registro;
     String data_nascimento;
+    RolesEnum role;
+
 
     public static ClientesDto fromEntity(ClientesEntity entity){
         if (entity.getStatus() == StatusEnum.ATIVO){
@@ -47,10 +48,15 @@ public class ClientesDto implements Serializable {
                     entity.getEstado(),
                     entity.getPais(),
                     entity.getStatus(),
-                    entity.getData_registro()
+                    entity.getStatus(), entity.getData_registro(),
+                    entity.getRole()
             );
         } else {
-            return new ClientesDto(entity.getId(), null, null, null, null, null, null, null, null, null, null, entity.getStatus(), null);
+            return new ClientesDto(entity.getId(),
+                    null,null,
+                    null, null,
+                    null, null,
+                    null, null, null, null, null, entity.getStatus(), null, null);
         }
 
     }
@@ -67,7 +73,8 @@ public class ClientesDto implements Serializable {
                        String estado,
                        String pais,
                        StatusEnum status,
-                       LocalDateTime data_registro) {
+                       StatusEnum entityStatus, LocalDateTime data_registro,
+                       RolesEnum role) {
         Id = id;
         this.nome = nome;
         this.data_nascimento = data_nascimento;
@@ -81,5 +88,6 @@ public class ClientesDto implements Serializable {
         this.pais = pais;
         this.status = status;
         this.data_registro = data_registro;
+        this.role = role;
     }
 }

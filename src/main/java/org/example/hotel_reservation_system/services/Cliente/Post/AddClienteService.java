@@ -1,5 +1,6 @@
 package org.example.hotel_reservation_system.services.Cliente.Post;
 
+import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
@@ -152,6 +153,7 @@ public class AddClienteService {
         clientes.setStatus(clientesDto.getStatus());
         clientes.setData_registro(LocalDateTime.now());
         clientes.setData_nascimento(clientesDto.getData_nascimento());
+        clientes.setRole(RolesEnum.ROLE_CLIENTE);
         return clientes;
     }
 }
