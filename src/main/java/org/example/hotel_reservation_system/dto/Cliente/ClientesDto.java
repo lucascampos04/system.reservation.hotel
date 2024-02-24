@@ -32,6 +32,10 @@ public class ClientesDto implements Serializable {
     String data_nascimento;
     RolesEnum role;
 
+    public ClientesDto() {
+
+    }
+
 
     public static ClientesDto fromEntity(ClientesEntity entity){
         if (entity.getStatus() == StatusEnum.ATIVO){
