@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.hibernate.annotations.ColumnDefault;
@@ -63,8 +64,7 @@ public class ClientesEntity{
 
     @Column(name = "roles")
     @Enumerated(EnumType.STRING)
-    private RolesEnum role;
-    @JsonIgnore
+    private RolesEnum role;@JsonIgnore
     public StatusEnum getStatus() {
         return status;
     }
