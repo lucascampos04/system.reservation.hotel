@@ -5,10 +5,15 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.management.relation.Role;
+
+import static org.example.hotel_reservation_system.Enum.roles.RolesEnum.ROLE_CLIENTE;
 
 @Entity
 @Getter
@@ -55,8 +60,14 @@ public class ClientesEntity{
 
     @Column(name = "data_registro")
     private LocalDateTime data_registro;
+
+    @Column(name = "roles")
+    @Enumerated(EnumType.STRING)
+    private RolesEnum role;
     @JsonIgnore
     public StatusEnum getStatus() {
         return status;
     }
+
+
 }
