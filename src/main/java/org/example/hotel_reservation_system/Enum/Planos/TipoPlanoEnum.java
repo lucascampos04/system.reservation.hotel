@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TipoPlanoEnum {
+    SEM_PLANO("Sem plano"),
     BASICO("Plano Básico"),
     PADRAO("Plano Padrão"),
     EXECUTIVO("Plano Executivo"),
