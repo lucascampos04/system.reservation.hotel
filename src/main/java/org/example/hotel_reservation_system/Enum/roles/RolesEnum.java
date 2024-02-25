@@ -1,7 +1,7 @@
 package org.example.hotel_reservation_system.Enum.roles;
 
 public enum RolesEnum {
-    SEM_PLANO,
+    ROLE_CLIENTE,
     ROLE_CLIENTE_BASICO,
     ROLE_CLIENTE_EXECUTIVO,
     ROLE_CLIENTE_LUXO,
