@@ -17,12 +17,12 @@ public class AuthorizationsServices {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_CLIENTE"))
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_CLIENTE_BASICO"))
         ) {
             String emailCliente = authentication.getName();
             ClientesEntity cliente = clientesRepository.findByEmail(emailCliente);
 
-            if (cliente != null && cliente.getRole() == RolesEnum.ROLE_CLIENTE){
+            if (cliente != null && cliente.getRole() == RolesEnum.ROLE_CLIENTE_BASICO){
                 return ResponseEntity.ok().build().hasBody();
             }
         }
