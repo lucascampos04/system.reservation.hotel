@@ -34,6 +34,10 @@ public class ClientesDto implements Serializable {
     RolesEnum role;
     PlanoDto plano;
 
+    public ClientesDto() {
+        
+    }
+
 
     public static ClientesDto fromEntity(ClientesEntity entity){
         if (entity == null){
