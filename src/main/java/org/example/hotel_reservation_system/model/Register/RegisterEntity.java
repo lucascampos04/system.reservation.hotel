@@ -20,22 +20,29 @@ public class RegisterEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
+
     @Column(name = "inicio_checkin")
     private LocalDateTime inicio_checkin;
+
     @Column(name = "final_checkin")
     private LocalDateTime final_checkin;
+
     @Column(name = "forma_pagamento")
     private String forma_pagamento;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'DESATIVADO'")
     private StatusEnum status;
+
     @Column(name = "valor")
     private Double valor;
+
     @Column(name = "pacote")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'DESATIVADO'")
     private PacoteEnum pacoteEnum;
+
     @Column(name = "descricao")
     private String descricao;
 
