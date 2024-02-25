@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
+import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,10 @@ public class ClientesEntity{
     @Column(name = "roles")
     @Enumerated(EnumType.STRING)
     private RolesEnum role;
+
+    @OneToOne
+    @JoinColumn(name = "plano_id")
+    private PlanoEntity plano;
     @JsonIgnore
     public StatusEnum getStatus() {
         return status;

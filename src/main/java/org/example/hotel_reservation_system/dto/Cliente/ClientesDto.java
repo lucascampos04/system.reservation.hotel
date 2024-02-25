@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
+import org.example.hotel_reservation_system.dto.Plano.PlanoDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.io.Serializable;
@@ -31,13 +32,14 @@ public class ClientesDto implements Serializable {
     LocalDateTime data_registro;
     String data_nascimento;
     RolesEnum role;
-
-    public ClientesDto() {
-
-    }
+    PlanoDto plano;
 
 
     public static ClientesDto fromEntity(ClientesEntity entity){
+        if (entity == null){
+            return null;
+        }
+
         if (entity.getStatus() == StatusEnum.ATIVO){
             return new ClientesDto(
                     entity.getId(),
@@ -53,14 +55,19 @@ public class ClientesDto implements Serializable {
                     entity.getPais(),
                     entity.getStatus(),
                     entity.getStatus(), entity.getData_registro(),
-                    entity.getRole()
+                    entity.getRole(),
+                    PlanoDto.fromEntity(entity.getPlano())
             );
         } else {
+            PlanoDto planoDto = PlanoDto.fromEntity(entity.getPlano());
             return new ClientesDto(entity.getId(),
                     null,null,
                     null, null,
                     null, null,
-                    null, null, null, null, null, entity.getStatus(), null, null);
+                    null, null, null,
+                    null, null, entity.getStatus(), null, null,
+                    planoDto != null ? planoDto : new PlanoDto()
+            );
         }
 
     }
@@ -78,7 +85,7 @@ public class ClientesDto implements Serializable {
                        String pais,
                        StatusEnum status,
                        StatusEnum entityStatus, LocalDateTime data_registro,
-                       RolesEnum role) {
+                       RolesEnum role, PlanoDto planoDto) {
         Id = id;
         this.nome = nome;
         this.data_nascimento = data_nascimento;
