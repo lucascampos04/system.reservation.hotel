@@ -153,7 +153,7 @@ public class AddClienteService {
         clientes.setStatus(clientesDto.getStatus());
         clientes.setData_registro(LocalDateTime.now());
         clientes.setData_nascimento(clientesDto.getData_nascimento());
-        clientes.setRole(RolesEnum.SEM_PLANO);
+        clientes.setRole(RolesEnum.ROLE_CLIENTE_BASICO);
         return clientes;
     }
 }
