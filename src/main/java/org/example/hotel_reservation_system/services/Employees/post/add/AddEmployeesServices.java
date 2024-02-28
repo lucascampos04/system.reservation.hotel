@@ -24,6 +24,63 @@ public class AddEmployeesServices {
         }
     }
 
+    private String ValidateEmployeesPattern(EmployeesDto dto){
+        if( containsWhitespace(dto.getNome()) || 
+            containsWhitespace(dto.getEmail()) || 
+            containsWhitespace(dto.getCpf()) || 
+            containsWhitespace(dto.getRg())){
+            return "Preencha todos os campos";
+        }
+        if(!isValidCpf(dto.getCpf())){
+            return "CPF inválido";
+        }
+        if(!isValidRg(dto.getRg())){
+            return "RG inválido";
+        }
+        if(!isValidName(dto.getNome())){
+            return "Nome inválido";
+        }
+        if(!isValidStatus(String.valueOf(dto.getStatus()))){
+            return "Status inválido";
+        }
+        if(!isValidCep(dto.getCep())){
+            return "CEP inválido";
+        }
+        if(!isValidPais(dto.getPais())){
+            return "País inválido";
+        }
+
+        return null;
+    }
+
+    private boolean containsWhitespace(String value) {
+        return value != null && value.contains(" ");
+    }
+    private boolean isValidCpf(String cpf){
+        String cpfRegex = "^\\d{11}$";
+        return cpf != null && cpf.matches(cpfRegex);
+    }
+    private boolean isValidRg(String rg){
+        String rgRegex = "^[0-9]{1,2}.?[0-9]{3}.?[0-9]{3}-?[0-9Xx]$";
+        return rg != null && rg.matches(rgRegex);
+    }
+    private boolean isValidName(String name){
+        String nameRegex = "[A-Z][a-z].* [A-Z][a-z].*";
+        return name != null && name.matches(nameRegex);
+    }
+    private boolean isValidStatus(String status){
+        return status.equals("ATIVO") || status.equals("DESATIVADO");
+    }
+    private boolean isValidCep(String cep){
+        String cepfRegex = "^(?=.*\\d)\\d{1,}$";
+        return cep != null && cep.matches(cepfRegex);
+    }
+
+    private boolean isValidPais(String pais){
+        String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
+        return pais != null && pais.matches(paisRegex);
+    }
+
     private EmployeesEntity getDads(EmployeesDto dto){
         EmployeesEntity employeesEntity = new EmployeesEntity();
         employeesEntity.setId(dto.getId());
