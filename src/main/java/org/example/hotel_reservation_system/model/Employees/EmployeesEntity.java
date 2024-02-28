@@ -21,6 +21,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeesEntity {
+    public static final String ResponseEntity = null;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;

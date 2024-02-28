@@ -33,6 +33,10 @@ public class EmployeesDto implements Serializable {
     LocalDateTime data_registro;
     Double salario;
 
+    public EmployeesDto() {
+
+    }
+
     public static EmployeesDto fromEntity(EmployeesEntity entity){
         return new EmployeesDto(
                 entity.getId(),
