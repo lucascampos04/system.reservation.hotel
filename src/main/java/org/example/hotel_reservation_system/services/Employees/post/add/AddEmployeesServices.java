@@ -49,7 +49,9 @@ public class AddEmployeesServices {
         if(!isValidPais(dto.getPais())){
             return "País inválido";
         }
-
+        if(!isValidSalario(String.valueOf((dto.getSalario())))){
+            return "Salário inválido";
+        }
         return null;
     }
 
@@ -75,11 +77,16 @@ public class AddEmployeesServices {
         String cepfRegex = "^(?=.*\\d)\\d{1,}$";
         return cep != null && cep.matches(cepfRegex);
     }
-
     private boolean isValidPais(String pais){
         String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
         return pais != null && pais.matches(paisRegex);
     }
+
+    private boolean isValidSalario(String salario){
+        String salarioRegex =" ^[0-9]+(\\.[0-9]+)?$\n";
+        return salario != null && salario.matches(salarioRegex);
+    }
+
 
     private EmployeesEntity getDads(EmployeesDto dto){
         EmployeesEntity employeesEntity = new EmployeesEntity();
