@@ -1,5 +1,6 @@
 package org.example.hotel_reservation_system.services.Employees.post.add;
 
+import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
 import org.example.hotel_reservation_system.dto.Employees.EmployeesDto;
 import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
 import org.example.hotel_reservation_system.repository.Employees.EmployeesRepository;
@@ -14,6 +15,12 @@ public class AddEmployeesServices {
 
     public ResponseEntity<String> addEmployees(EmployeesDto employeesDto){
         try {
+            String validarCampos = ValidateEmployeesPattern(employeesDto);
+
+            if (validarCampos != null){
+                return ResponseEntity.badRequest().body("Error : " + validarCampos);
+            }
+
             EmployeesEntity entity = getDads(employeesDto);
             employeesRepository.save(entity);
 
@@ -23,6 +30,7 @@ public class AddEmployeesServices {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     private String ValidateEmployeesPattern(EmployeesDto dto){
         if( containsWhitespace(dto.getNome()) || 
@@ -50,6 +58,9 @@ public class AddEmployeesServices {
             return "País inválido";
         }
         if(!isValidSalario(String.valueOf((dto.getSalario())))){
+            return "Salário inválido";
+        }
+        if (!validarSalary(dto)){
             return "Salário inválido";
         }
         return null;
@@ -87,6 +98,49 @@ public class AddEmployeesServices {
         return salario != null && salario.matches(salarioRegex);
     }
 
+    private boolean validarSalary(EmployeesDto employeesDto) {
+        CargoEmployees cargo = employeesDto.getCargo();
+        double salario = employeesDto.getSalario();
+
+        switch (cargo) {
+            case GERENTE:
+                if (salario <= 10000) {
+                    return false;
+                }
+                break;
+            case RECEPCIONISTA:
+                if (salario >= 3500) {
+                    return false;
+                }
+                break;
+            case CAMAREIRA, MANOBRISTA:
+                if (salario >= 3000) {
+                    return false;
+                }
+                break;
+            case GARCOM:
+                if (salario >= 2500) {
+                    return false;
+                }
+                break;
+            case COZINHEIRO:
+                if (salario >= 4000) {
+                    return false;
+                }
+                break;
+            case SEGURANCA:
+                if (salario >= 5500) {
+                    return false;
+                }
+                break;
+            case LIMPEZA, OUTROS:
+                if (salario >= 2000) {
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
 
     private EmployeesEntity getDads(EmployeesDto dto){
         EmployeesEntity employeesEntity = new EmployeesEntity();
