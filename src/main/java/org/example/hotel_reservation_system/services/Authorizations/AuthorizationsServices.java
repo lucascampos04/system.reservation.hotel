@@ -30,9 +30,19 @@ public class AuthorizationsServices {
 
     }
 
-    public boolean AcessAreaVip(){
+    public boolean AcessFull(String[] acessBlocks){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> " ROLE_CLIENTE_EXECUTIVOO".equals(authority.getAuthority()) || "ROLE_CLIENTE_LUXO".equals(authority.getAuthority()))
+        ){
+            String emailCliente = authentication.getName();
+            ClientesEntity cliente = clientesRepository.findByEmail(emailCliente);
+
+            if (cliente.getRole() == RolesEnum.ROLE_CLIENTE_EXECUTIVO || cliente.getRole() == RolesEnum.ROLE_CLIENTE_LUXO){
+                return ResponseEntity.ok().build().hasBody();
+            }
+        }
 
         return false;
     }

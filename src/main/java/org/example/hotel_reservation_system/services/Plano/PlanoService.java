@@ -28,5 +28,7 @@ public class PlanoService {
             Double novoValor = registerDto.getValor() - desconto;
             registerDto.setValor(novoValor);
         }
+
+
     }
 }
