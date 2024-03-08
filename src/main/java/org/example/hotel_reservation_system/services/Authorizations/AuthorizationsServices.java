@@ -17,15 +17,23 @@ public class AuthorizationsServices {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_CLIENTE_BASICO"))
+                .anyMatch(authority -> "ROLE_CLIENTE_BASICO".equals(authority.getAuthority()) || "ROLE_CLIENTE".equals(authority.getAuthority()))
         ) {
             String emailCliente = authentication.getName();
             ClientesEntity cliente = clientesRepository.findByEmail(emailCliente);
 
-            if (cliente != null && cliente.getRole() == RolesEnum.ROLE_CLIENTE_BASICO){
+            if (cliente.getRole() == RolesEnum.ROLE_CLIENTE_BASICO || cliente.getRole() == RolesEnum.ROLE_CLIENTE){
                 return ResponseEntity.ok().build().hasBody();
             }
         }
         return ResponseEntity.notFound().build().hasBody();
+
+    }
+
+    public boolean AcessAreaVip(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        return false;
     }
 }
