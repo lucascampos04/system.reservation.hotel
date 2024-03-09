@@ -14,26 +14,26 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanoDto implements Serializable {
-    TipoPlanoEnum plano;
-    Double valor;
+    private TipoPlanoEnum plano;
+    private Double valor;
 
     public static PlanoDto fromEntity(PlanoEntity entity) {
-        if (entity == null){
-            return null;
+        if (entity != null) {
+            PlanoDto dto = new PlanoDto();
+            dto.setPlano(entity.getPlano());
+            dto.setValor(entity.getValor());
+            return dto;
         }
-        PlanoDto dto = new PlanoDto();
-        dto.setPlano(entity.getPlano());
-        dto.setValor(entity.getValor());
-        return dto;
+        return null;
     }
+
     public PlanoDto(TipoPlanoEnum plano, Double valor) {
         this.plano = plano;
         this.valor = valor;
     }
 
-    public PlanoDto(){
+    public PlanoDto() {
 
     }
 }

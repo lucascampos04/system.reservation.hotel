@@ -1,6 +1,5 @@
 package org.example.hotel_reservation_system.dto.Cliente;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
@@ -11,14 +10,10 @@ import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * DTO for {@link org.example.hotel_reservation_system.model.Clientes.ClientesEntity}
- */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientesDto implements Serializable {
-    Long Id;
+    Long id;
     String nome;
     String email;
     String cpf;
@@ -32,18 +27,21 @@ public class ClientesDto implements Serializable {
     LocalDateTime data_registro;
     String data_nascimento;
     RolesEnum role;
-    PlanoDto plano;
+    Double valor;
+    Double planoValor;
+    String planoMsg;
 
     public ClientesDto() {
-        
+
     }
 
-
-    public static ClientesDto fromEntity(ClientesEntity entity){
-        if (entity == null){
+    public static ClientesDto fromEntity(ClientesEntity entity) {
+        if (entity == null) {
             return null;
         }
 
+        PlanoDto planoDto = PlanoDto.fromEntity(entity.getPlano());
+        Double planoValor = (planoDto != null) ? planoDto.getValor() : null;
         if (entity.getStatus() == StatusEnum.ATIVO){
             return new ClientesDto(
                     entity.getId(),
@@ -58,51 +56,56 @@ public class ClientesDto implements Serializable {
                     entity.getEstado(),
                     entity.getPais(),
                     entity.getStatus(),
-                    entity.getStatus(), entity.getData_registro(),
+                    entity.getData_registro(),
                     entity.getRole(),
-                    PlanoDto.fromEntity(entity.getPlano())
+                    planoValor,
+                    planoValor,
+                    null
             );
         } else {
-            PlanoDto planoDto = PlanoDto.fromEntity(entity.getPlano());
-            return new ClientesDto(entity.getId(),
-                    null,null,
-                    null, null,
-                    null, null,
-                    null, null, null,
-                    null, null, entity.getStatus(), null, null,
-                    planoDto != null ? planoDto : new PlanoDto()
+            String planoMsg = (planoDto != null) ? "Cliente com plano" : "Cliente sem plano";
+
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getEmail(),
+                    entity.getCpf(),
+                    entity.getRg(),
+                    entity.getEndereco(),
+                    entity.getCep(),
+                    entity.getData_nascimento(),
+                    entity.getNumero(),
+                    entity.getEstado(),
+                    entity.getPais(),
+                    entity.getStatus(),
+                    entity.getData_registro(),
+                    entity.getRole(),
+                    null,
+                    planoValor,
+                    planoMsg
             );
         }
-
     }
 
-    public ClientesDto(Long id,
-                       String nome,
-                       String email,
-                       String cpf,
-                       String rg,
-                       String endereco,
-                       String cep,
-                       String data_nascimento,
-                       String numero,
-                       String estado,
-                       String pais,
-                       StatusEnum status,
-                       StatusEnum entityStatus, LocalDateTime data_registro,
-                       RolesEnum role, PlanoDto planoDto) {
-        Id = id;
+    public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
+                       String data_nascimento, String numero, String estado, String pais, StatusEnum status,
+                       LocalDateTime data_registro, RolesEnum role, Double valor, Double planoValor, String planoMsg) {
+        this.id = id;
         this.nome = nome;
-        this.data_nascimento = data_nascimento;
         this.email = email;
         this.cpf = cpf;
         this.rg = rg;
         this.endereco = endereco;
         this.cep = cep;
+        this.data_nascimento = data_nascimento;
         this.numero = numero;
         this.estado = estado;
         this.pais = pais;
         this.status = status;
         this.data_registro = data_registro;
         this.role = role;
+        this.valor = valor;
+        this.planoValor = planoValor;
+        this.planoMsg = planoMsg;
     }
 }
