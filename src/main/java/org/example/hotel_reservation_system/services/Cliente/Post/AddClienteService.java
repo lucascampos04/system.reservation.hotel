@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class AddClienteService {
@@ -121,16 +122,13 @@ public class AddClienteService {
     private boolean cpfExist(String cpf){
         return clientesRepository.existsByCpf(cpf);
     }
-
     private boolean rgExist(String rg){
         return clientesRepository.existsByRg(rg);
     }
 
-
-
     private Long generatedIdUnique(){
         long id = 0;
-        Random random = new Random();
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         do {
             id = 100000 + random.nextInt(900000);
         } while (clientesRepository.existsById(id));
