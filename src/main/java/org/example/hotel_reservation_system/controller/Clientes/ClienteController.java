@@ -29,10 +29,20 @@ public class ClienteController {
         }
         return null;
     }
-    @PutMapping("/upddate/patch/clientes/{id}")
+    @PutMapping("/update/put/clientes/{id}")
     public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody ClientesDto clientesDto){
         try {
             return putCliente.updateClientes(id, clientesDto);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente");
+        }
+    }
+
+    @PatchMapping("/update/patch/clientes/{id}")
+    public ResponseEntity<String> atualizarClienteParcial(@PathVariable Long id, @RequestBody ClientesDto clientes){
+        try {
+           return ResponseEntity.ok("Cliente Atualizado com sucesso");
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente");
