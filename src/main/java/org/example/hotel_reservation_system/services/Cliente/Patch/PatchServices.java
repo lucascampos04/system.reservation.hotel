@@ -28,18 +28,38 @@ public class PatchServices {
         return null;
     }
 
-    private void applyPartialUpdate(ClientesEntity cliente, Map<String, Object> updates){
-        for (Map.Entry<String, Object> entry : updates.entrySet()){
-            String fielName = entry.getKey();
-            String fieldEmail = entry.getKey();
+    private void applyPartialUpdate(ClientesEntity cliente, Map<String, Object> updates) {
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            String fieldName = entry.getKey();
             Object value = entry.getValue();
 
-            if ("nome".equals(fielName) && value instanceof  String){
-                cliente.setNome((String) value);
-            } else if ("email".equals(fieldEmail) && value instanceof String){
-                cliente.setEmail((String) value);
+            if (value != null) {
+                switch (fieldName) {
+                    case "nome":
+                        if (value instanceof String)
+                            cliente.setNome((String) value);
+                        break;
+                    case "email":
+                        if (value instanceof String)
+                            cliente.setEmail((String) value);
+                        break;
+                    case "cpf":
+                        if (value instanceof String)
+                            cliente.setCpf((String) value);
+                        break;
+                    case "rg":
+                        if (value instanceof String)
+                            cliente.setRg((String) value);
+                        break;
+                    default:
+                        System.out.println("Campo inválido ou tipo de valor inválido: " + fieldName);
+                        break;
+                }
+            } else {
+                System.out.println("Valor nulo para o campo: " + fieldName);
             }
         }
     }
+
 
 }
