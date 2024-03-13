@@ -1,5 +1,6 @@
 package org.example.hotel_reservation_system.services.Cliente.Post;
 
+import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
@@ -44,6 +45,15 @@ public class AddClienteService {
     }
 
     private String validarCamposPattern(ClientesDto clientesDto){
+        if (clientesDto.getStatus() == null){
+            clientesDto.setStatus(StatusEnum.ATIVO);
+        }
+
+        if (clientesDto == null){
+            return "DTO de cliente é null";
+        }
+
+
         if (containsWhitespace(clientesDto.getEmail())) {
             return "O Email não pode conter espaços";
         }
@@ -148,7 +158,7 @@ public class AddClienteService {
         clientes.setNumero(clientesDto.getNumero());
         clientes.setEstado(clientesDto.getEstado());
         clientes.setPais(clientesDto.getPais());
-        clientes.setStatus(clientesDto.getStatus());
+        clientes.setStatus(StatusEnum.ATIVO);
         clientes.setData_registro(LocalDateTime.now());
         clientes.setData_nascimento(clientesDto.getData_nascimento());
         clientes.setRole(RolesEnum.ROLE_CLIENTE_BASICO);
