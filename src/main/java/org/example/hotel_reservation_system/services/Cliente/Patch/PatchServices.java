@@ -1,16 +1,11 @@
 package org.example.hotel_reservation_system.services.Cliente.Patch;
 
-import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
-import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
-import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
