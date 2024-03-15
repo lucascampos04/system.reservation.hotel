@@ -5,6 +5,7 @@ import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.services.EmailServices.Client.NotificationClientInsert;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AddClienteService {
 
     private final ClientesRepository clientesRepository;
+    private final NotificationClientInsert notificationClientInsert;
 
-    public AddClienteService(ClientesRepository clientesRepository) {
+    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert) {
         this.clientesRepository = clientesRepository;
+        this.notificationClientInsert = notificationClientInsert;
     }
 
     @SuppressWarnings("null")
@@ -37,6 +40,8 @@ public class AddClienteService {
 
             ClientesEntity clientesEntity = getDads(clientesDto);
             clientesRepository.save(clientesEntity);
+
+            notificationClientInsert.SendEmailOfClientCreate(clientesDto.getEmail(), clientesDto.getNome(), clientesDto.getPlanoMsg());
             return ResponseEntity.ok("Cliente adicionado com sucesso");
         } catch (Exception e){
             e.printStackTrace();
@@ -112,9 +117,9 @@ public class AddClienteService {
         return pais != null && pais.matches(paisRegex);
     }
     private String verificarCampoExistente(ClientesDto clientesDto){
-        if (emailExist(clientesDto.getEmail())){
-            return "Email já está em uso";
-        }
+        //if (emailExist(clientesDto.getEmail())){
+        //    return "Email já está em uso";
+        //}
 
         if (cpfExist(clientesDto.getCpf())){
             return "CPF já está em uso";
@@ -126,9 +131,9 @@ public class AddClienteService {
         return null;
     }
 
-    private boolean emailExist(String email){
-        return clientesRepository.existsByEmail(email);
-    }
+    //private boolean emailExist(String email){
+    //    return clientesRepository.existsByEmail(email);
+    //}
     private boolean cpfExist(String cpf){
         return clientesRepository.existsByCpf(cpf);
     }
