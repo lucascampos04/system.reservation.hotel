@@ -47,13 +47,39 @@ public class NotificationClientInsert {
                 "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "    <title>Client Email Template</title>\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: Arial, sans-serif;\n" +
+                "            background-color: #f4f4f4;\n" +
+                "            color: #333;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "        }\n" +
+                "        .container {\n" +
+                "            max-width: 600px;\n" +
+                "            margin: 20px auto;\n" +
+                "            padding: 20px;\n" +
+                "            background-color: #fff;\n" +
+                "            border-radius: 8px;\n" +
+                "            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n" +
+                "        }\n" +
+                "        h2 {\n" +
+                "            color: #007bff;\n" +
+                "        }\n" +
+                "        p {\n" +
+                "            margin-bottom: 15px;\n" +
+                "        }\n" +
+                "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <h2>Olá "+ nome +",</h2>\n" +
-                "    <p>Seja bem-vindo ao nosso serviço! Você foi registrado com sucesso.</p>\n" +
-                "    <p>Plano selecionado: " + plano + "</p>\n" +
-                "    <p>Obrigado por escolher nossos serviços.</p>\n" +
+                "    <div class=\"container\">\n" +
+                "        <h2>Olá "+ nome +",</h2>\n" +
+                "        <p>Seja bem-vindo ao nosso serviço! Você foi registrado com sucesso.</p>\n" +
+                "        <p>Plano selecionado: " + plano + "</p>\n" +
+                "        <p>Obrigado por escolher nossos serviços.</p>\n" +
+                "    </div>\n" +
                 "</body>\n" +
                 "</html>\n";
     }
+
 }
