@@ -62,7 +62,6 @@ public class AddClienteService {
             return "DTO de cliente é null";
         }
 
-
         if (containsWhitespace(clientesDto.getEmail())) {
             return "O Email não pode conter espaços";
         }
@@ -90,6 +89,10 @@ public class AddClienteService {
         if (!isValidPais(clientesDto.getPais())){
             return "País inválido";
         }
+
+        if (!isValidPlano(TipoPlanoEnum.valueOf(clientesDto.getPlano()))){
+            return "Plano inválido";
+        }
         return null;
     }
 
@@ -110,6 +113,28 @@ public class AddClienteService {
     }
     private boolean isValidStatus(String status){
         return status.equals("ATIVO") || status.equals("DESATIVADO");
+    }
+
+    private boolean isValidPlano(TipoPlanoEnum planoEnum){
+        String[] planos = {
+                String.valueOf(TipoPlanoEnum.BASICO),
+                String.valueOf(TipoPlanoEnum.PADRAO),
+                String.valueOf(TipoPlanoEnum.EXECUTIVO),
+                String.valueOf(TipoPlanoEnum.NEGOCIOS),
+                String.valueOf(TipoPlanoEnum.LUXO),
+                String.valueOf(TipoPlanoEnum.ROMANCE),
+                String.valueOf(TipoPlanoEnum.FAMILIA),
+                String.valueOf(TipoPlanoEnum.LONGA_ESTADIA),
+                String.valueOf(TipoPlanoEnum.VIP),
+                String.valueOf(TipoPlanoEnum.COBERTURA),
+        };
+
+        for (int i = 0; i < planos.length; i++) {
+            if (planos[i].equals(String.valueOf(planoEnum))){
+                return true;
+            }
+        }
+        return false;
     }
     private boolean isValidCep(String cep){
         String cepfRegex = "^(?=.*\\d)\\d{1,}$";
@@ -172,6 +197,13 @@ public class AddClienteService {
         clientes.setData_nascimento(clientesDto.getData_nascimento());
         clientes.setRole(RolesEnum.ROLE_CLIENTE_BASICO);
 
+        if (clientesDto.getPlano() == null){
+            PlanoEntity plano = new PlanoEntity();
+            plano.setId(clientes.getId());
+            plano.setPlano(TipoPlanoEnum.SEM_PLANO);
+            plano.setValor(null);
+        }
+
         if (clientesDto.getPlano() != null) {
             PlanoEntity plano = new PlanoEntity();
 
@@ -184,6 +216,33 @@ public class AddClienteService {
                 plano.setValor(100.0);
             }
 
+            if (plano.getPlano() == TipoPlanoEnum.BASICO){
+                plano.setValor(50.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.FAMILIA){
+                plano.setValor(150.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.LUXO){
+                plano.setValor(1500.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.COBERTURA){
+                plano.setValor(1000.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.EXECUTIVO){
+                plano.setValor(2600.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.NEGOCIOS){
+                plano.setValor(5000.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.LONGA_ESTADIA){
+                plano.setValor(3000.0);
+            }
             planoRepository.save(plano);
         }
 
