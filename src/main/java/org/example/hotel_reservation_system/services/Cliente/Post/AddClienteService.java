@@ -62,7 +62,6 @@ public class AddClienteService {
             return "DTO de cliente é null";
         }
 
-
         if (containsWhitespace(clientesDto.getEmail())) {
             return "O Email não pode conter espaços";
         }
@@ -89,6 +88,10 @@ public class AddClienteService {
 
         if (!isValidPais(clientesDto.getPais())){
             return "País inválido";
+        }
+
+        if (!isValidPlano(TipoPlanoEnum.valueOf(clientesDto.getPlano()))){
+            return "Plano inválido";
         }
         return null;
     }
