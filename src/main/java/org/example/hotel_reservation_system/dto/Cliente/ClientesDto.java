@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
-import org.example.hotel_reservation_system.dto.Plano.PlanoDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -27,69 +27,44 @@ public class ClientesDto implements Serializable {
     LocalDateTime data_registro;
     String data_nascimento;
     RolesEnum role;
-    Double valor;
     Double planoValor;
-    String planoMsg;
+    String plano;
 
-    public ClientesDto() {
-
-    }
+    public ClientesDto() {}
 
     public static ClientesDto fromEntity(ClientesEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        PlanoDto planoDto = PlanoDto.fromEntity(entity.getPlano());
-        Double planoValor = (planoDto != null) ? planoDto.getValor() : null;
-        if (entity.getStatus() == StatusEnum.ATIVO){
-            return new ClientesDto(
-                    entity.getId(),
-                    entity.getNome(),
-                    entity.getEmail(),
-                    entity.getCpf(),
-                    entity.getRg(),
-                    entity.getEndereco(),
-                    entity.getCep(),
-                    entity.getData_nascimento(),
-                    entity.getNumero(),
-                    entity.getEstado(),
-                    entity.getPais(),
-                    entity.getStatus(),
-                    entity.getData_registro(),
-                    entity.getRole(),
-                    planoValor,
-                    planoValor,
-                    null
-            );
-        } else {
-            String planoMsg = (planoDto != null) ? "Cliente com plano" : "Cliente sem plano";
+        PlanoEntity plano = entity.getPlano();
+        Double planoValor = (plano != null) ? plano.getValor() : null;
+        String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
 
-            return new ClientesDto(
-                    entity.getId(),
-                    entity.getNome(),
-                    entity.getEmail(),
-                    entity.getCpf(),
-                    entity.getRg(),
-                    entity.getEndereco(),
-                    entity.getCep(),
-                    entity.getData_nascimento(),
-                    entity.getNumero(),
-                    entity.getEstado(),
-                    entity.getPais(),
-                    entity.getStatus(),
-                    entity.getData_registro(),
-                    entity.getRole(),
-                    null,
-                    planoValor,
-                    planoMsg
-            );
-        }
+        return new ClientesDto(
+                entity.getId(),
+                entity.getNome(),
+                entity.getEmail(),
+                entity.getCpf(),
+                entity.getRg(),
+                entity.getEndereco(),
+                entity.getCep(),
+                entity.getData_nascimento(),
+                entity.getNumero(),
+                entity.getEstado(),
+                entity.getPais(),
+                entity.getStatus(),
+                entity.getData_registro(),
+                entity.getRole(),
+                planoValor,
+                (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
+                planoNome
+        );
     }
 
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
                        String data_nascimento, String numero, String estado, String pais, StatusEnum status,
-                       LocalDateTime data_registro, RolesEnum role, Double valor, Double planoValor, String planoMsg) {
+                       LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo, String plano) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -104,8 +79,11 @@ public class ClientesDto implements Serializable {
         this.status = status;
         this.data_registro = data_registro;
         this.role = role;
-        this.valor = valor;
         this.planoValor = planoValor;
-        this.planoMsg = planoMsg;
+        this.plano = plano;
+
+        if (status == StatusEnum.ATIVO) {
+            this.planoValor = planoValorAtivo;
+        }
     }
 }

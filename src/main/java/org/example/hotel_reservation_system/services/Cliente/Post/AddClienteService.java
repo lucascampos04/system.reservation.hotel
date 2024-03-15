@@ -1,16 +1,18 @@
 package org.example.hotel_reservation_system.services.Cliente.Post;
 
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.repository.Plano.PlanoRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Client.NotificationClientInsert;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -18,10 +20,12 @@ public class AddClienteService {
 
     private final ClientesRepository clientesRepository;
     private final NotificationClientInsert notificationClientInsert;
+    private final PlanoRepository planoRepository;
 
-    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert) {
+    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert, PlanoRepository planoRepository) {
         this.clientesRepository = clientesRepository;
         this.notificationClientInsert = notificationClientInsert;
+        this.planoRepository = planoRepository;
     }
 
     @SuppressWarnings("null")
@@ -41,7 +45,7 @@ public class AddClienteService {
             ClientesEntity clientesEntity = getDads(clientesDto);
             clientesRepository.save(clientesEntity);
 
-            notificationClientInsert.SendEmailOfClientCreate(clientesDto.getEmail(), clientesDto.getNome(), clientesDto.getPlanoMsg());
+            notificationClientInsert.SendEmailOfClientCreate(clientesDto.getEmail(), clientesDto.getNome(), clientesDto.getPlano().toString());
             return ResponseEntity.ok("Cliente adicionado com sucesso");
         } catch (Exception e){
             e.printStackTrace();
@@ -167,6 +171,22 @@ public class AddClienteService {
         clientes.setData_registro(LocalDateTime.now());
         clientes.setData_nascimento(clientesDto.getData_nascimento());
         clientes.setRole(RolesEnum.ROLE_CLIENTE_BASICO);
+
+        if (clientesDto.getPlano() != null) {
+            PlanoEntity plano = new PlanoEntity();
+
+            plano.setId(clientes.getId());
+
+            plano.setPlano(TipoPlanoEnum.valueOf(String.valueOf(clientesDto.getPlano())));
+            clientes.setPlano(plano);
+
+            if (plano.getPlano() == TipoPlanoEnum.PADRAO){
+                plano.setValor(100.0);
+            }
+
+            planoRepository.save(plano);
+        }
+
         return clientes;
     }
 }
