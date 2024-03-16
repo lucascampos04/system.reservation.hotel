@@ -1,9 +1,11 @@
 package org.example.hotel_reservation_system.services.Cliente.Post;
 
+import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
+import org.example.hotel_reservation_system.dto.Plano.PlanoDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum.valueOf;
 
 @Service
 public class AddClienteService {
@@ -90,7 +94,7 @@ public class AddClienteService {
             return "País inválido";
         }
 
-        if (!isValidPlano(TipoPlanoEnum.valueOf(clientesDto.getPlano()))){
+        if (!isValidPlano(valueOf(clientesDto.getPlano()))){
             return "Plano inválido";
         }
         return null;
@@ -209,8 +213,16 @@ public class AddClienteService {
 
             plano.setId(clientes.getId());
 
-            plano.setPlano(TipoPlanoEnum.valueOf(String.valueOf(clientesDto.getPlano())));
+            if (clientesDto.getPlanoPacote() != null) {
+                plano.setPacote(plano.getPacote());
+            } else {
+                plano.setPacote(String.valueOf(PacoteEnum.DIARIA));
+            }
+            System.out.println("Pacote adicionada com sucesso " + plano.getPacote());
+            plano.setPlano(valueOf(String.valueOf(clientesDto.getPlano())));
+
             clientes.setPlano(plano);
+
 
             if (plano.getPlano() == TipoPlanoEnum.PADRAO){
                 plano.setValor(100.0);

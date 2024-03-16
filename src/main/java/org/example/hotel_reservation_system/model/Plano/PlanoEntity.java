@@ -3,6 +3,7 @@ package org.example.hotel_reservation_system.model.Plano;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
@@ -16,6 +17,9 @@ public class PlanoEntity{
 
     @Column(name = "plano")
     private TipoPlanoEnum plano;
+
+    @Column(name = "pacote")
+    private String pacote;
 
     @Column(name = "valor")
     private Double valor;
