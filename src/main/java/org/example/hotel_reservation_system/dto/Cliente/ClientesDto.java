@@ -29,7 +29,6 @@ public class ClientesDto implements Serializable {
     RolesEnum role;
     Double planoValor;
     String plano;
-    String planoPacote;
 
     public ClientesDto() {}
 
@@ -41,7 +40,7 @@ public class ClientesDto implements Serializable {
         PlanoEntity plano = entity.getPlano();
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
-        String planoPacote = (plano != null) ? String.valueOf(plano.getPacote()) : null;
+
         return new ClientesDto(
                 entity.getId(),
                 entity.getNome(),
@@ -59,15 +58,14 @@ public class ClientesDto implements Serializable {
                 entity.getRole(),
                 planoValor,
                 (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
-                planoNome,
-                planoPacote
+                planoNome
         );
     }
 
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
                        String data_nascimento, String numero, String estado, String pais, StatusEnum status,
                        LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo,
-                       String plano, String planoPacote) {
+                       String plano) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -84,7 +82,6 @@ public class ClientesDto implements Serializable {
         this.role = role;
         this.planoValor = planoValor;
         this.plano = plano;
-        this.planoPacote = planoPacote;
 
         if (status == StatusEnum.ATIVO) {
             this.planoValor = planoValorAtivo;
