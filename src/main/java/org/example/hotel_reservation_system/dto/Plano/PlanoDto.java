@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class PlanoDto implements Serializable {
     private TipoPlanoEnum plano;
     private Double valor;
+    private String planoPacote;
 
     public static PlanoDto fromEntity(PlanoEntity entity) {
         if (entity != null) {

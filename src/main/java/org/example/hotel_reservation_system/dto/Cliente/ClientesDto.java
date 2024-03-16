@@ -29,6 +29,7 @@ public class ClientesDto implements Serializable {
     RolesEnum role;
     Double planoValor;
     String plano;
+    String planoPacote;
 
     public ClientesDto() {}
 
@@ -40,53 +41,33 @@ public class ClientesDto implements Serializable {
         PlanoEntity plano = entity.getPlano();
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
-        if (entity.getStatus() == StatusEnum.INATIVO){
-            return new ClientesDto(
-                    entity.getId(),
-                    entity.getNome(),
-                    entity.getEmail(),
-                    entity.getCpf(),
-                    entity.getRg(),
-                    entity.getEndereco(),
-                    entity.getCep(),
-                    entity.getData_nascimento(),
-                    entity.getNumero(),
-                    entity.getEstado(),
-                    entity.getPais(),
-                    entity.getStatus(),
-                    entity.getData_registro(),
-                    entity.getRole(),
-                    planoValor,
-                    (entity.getStatus() == StatusEnum.ATIVO)? planoValor : null,
-                    planoNome
-            );
-        } else if (entity.getStatus() != StatusEnum.INATIVO) {
-            return new ClientesDto(
-                    entity.getId(),
-                    entity.getNome(),
-                    entity.getEmail(),
-                    entity.getCpf(),
-                    entity.getRg(),
-                    entity.getEndereco(),
-                    entity.getCep(),
-                    entity.getData_nascimento(),
-                    entity.getNumero(),
-                    entity.getEstado(),
-                    entity.getPais(),
-                    entity.getStatus(),
-                    entity.getData_registro(),
-                    entity.getRole(),
-                    planoValor,
-                    (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
-                    planoNome
-            );
-        }
-        return null;
+        String planoPacote = (plano != null) ? String.valueOf(plano.getPacote()) : null;
+        return new ClientesDto(
+                entity.getId(),
+                entity.getNome(),
+                entity.getEmail(),
+                entity.getCpf(),
+                entity.getRg(),
+                entity.getEndereco(),
+                entity.getCep(),
+                entity.getData_nascimento(),
+                entity.getNumero(),
+                entity.getEstado(),
+                entity.getPais(),
+                entity.getStatus(),
+                entity.getData_registro(),
+                entity.getRole(),
+                planoValor,
+                (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
+                planoNome,
+                planoPacote
+        );
     }
 
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
                        String data_nascimento, String numero, String estado, String pais, StatusEnum status,
-                       LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo, String plano) {
+                       LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo,
+                       String plano, String planoPacote) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -103,6 +84,7 @@ public class ClientesDto implements Serializable {
         this.role = role;
         this.planoValor = planoValor;
         this.plano = plano;
+        this.planoPacote = planoPacote;
 
         if (status == StatusEnum.ATIVO) {
             this.planoValor = planoValorAtivo;
