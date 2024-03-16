@@ -23,3 +23,5 @@ where plano_id in (
 	left join plano_entity p on c.plano_id = p.id
 	where p.pacote is null
 );
+
+select id, status from clientes;
