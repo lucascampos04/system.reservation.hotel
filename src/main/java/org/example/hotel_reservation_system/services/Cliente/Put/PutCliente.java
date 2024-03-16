@@ -1,8 +1,11 @@
 package org.example.hotel_reservation_system.services.Cliente.Put;
 
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.repository.Plano.PlanoRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +15,24 @@ import java.util.Optional;
 public class PutCliente {
 
     private final ClientesRepository clientesRepository;
-    public PutCliente(ClientesRepository clientesRepository) {
+    private final PlanoRepository planoRepository;
+
+    public PutCliente(ClientesRepository clientesRepository, PlanoRepository planoRepository) {
         this.clientesRepository = clientesRepository;
+        this.planoRepository = planoRepository;
     }
 
-    public ResponseEntity<String> updateClientes(Long id, ClientesDto clientesDto){
+    public ResponseEntity<String> updateClientes(Long id, ClientesDto clientesDto) {
         try {
             Optional<ClientesEntity> optional = clientesRepository.findById(id);
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 String validated = validadFields(clientesDto);
 
-                if (validated != null){
+                if (validated != null) {
                     return ResponseEntity.badRequest().body("Error : " + validated);
                 }
 
-                if (isRgOrCpfAlreadyInUse(clientesDto.getRg(), clientesDto.getCpf(), id)){
+                if (isRgOrCpfAlreadyInUse(clientesDto.getRg(), clientesDto.getCpf(), id)) {
                     return ResponseEntity.badRequest().body("O CPF ou o RG já está em uso");
                 }
                 update(optional.get(), clientesDto);
@@ -40,13 +46,14 @@ public class PutCliente {
         }
     }
 
-    private boolean isRgOrCpfAlreadyInUse(String rg, String cpf, Long currentClient){
+    private boolean isRgOrCpfAlreadyInUse(String rg, String cpf, Long currentClient) {
         Optional<ClientesEntity> existingRgClient = clientesRepository.findByRgAndIdNot(rg, currentClient);
         Optional<ClientesEntity> existingCpfClient = clientesRepository.findByCpfAndIdNot(cpf, currentClient);
 
         return existingRgClient.isPresent() || existingCpfClient.isPresent();
     }
-    private String validadFields(ClientesDto clientesDto){
+
+    private String validadFields(ClientesDto clientesDto) {
         if (containsWhitespace(clientesDto.getEmail())) {
             return "O Email não pode conter espaços";
         }
@@ -67,11 +74,11 @@ public class PutCliente {
             return "Status inválido";
         }
 
-        if (!isValidCep(clientesDto.getCep())){
+        if (!isValidCep(clientesDto.getCep())) {
             return "CEP inválido";
         }
 
-        if (!isValidPais(clientesDto.getPais())){
+        if (!isValidPais(clientesDto.getPais())) {
             return "País inválido";
         }
         return null;
@@ -80,31 +87,37 @@ public class PutCliente {
     private boolean containsWhitespace(String value) {
         return value != null && value.contains(" ");
     }
-    private boolean isValidCpf(String cpf){
+
+    private boolean isValidCpf(String cpf) {
         String cpfRegex = "^\\d{11}$";
         return cpf != null && cpf.matches(cpfRegex);
     }
-    private boolean isValidRg(String rg){
+
+    private boolean isValidRg(String rg) {
         String rgRegex = "^[0-9]{1,2}.?[0-9]{3}.?[0-9]{3}-?[0-9Xx]$";
         return rg != null && rg.matches(rgRegex);
     }
-    private boolean isValidName(String name){
+
+    private boolean isValidName(String name) {
         String nameRegex = "[A-Z][a-z].* [A-Z][a-z].*";
         return name != null && name.matches(nameRegex);
     }
-    private boolean isValidStatus(String status){
+
+    private boolean isValidStatus(String status) {
         return status.equals("ATIVO") || status.equals("DESATIVADO");
     }
-    private boolean isValidCep(String cep){
+
+    private boolean isValidCep(String cep) {
         String cepfRegex = "^(?=.*\\d)\\d{1,}$";
         return cep != null && cep.matches(cepfRegex);
     }
 
-    private boolean isValidPais(String pais){
+    private boolean isValidPais(String pais) {
         String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
         return pais != null && pais.matches(paisRegex);
     }
-    private void update(ClientesEntity clientes, ClientesDto clientesDto){
+
+    private void update(ClientesEntity clientes, ClientesDto clientesDto) {
         clientes.setNome(clientesDto.getNome());
         clientes.setEmail(clientesDto.getEmail());
         clientes.setCpf(clientesDto.getCpf());
@@ -116,6 +129,57 @@ public class PutCliente {
         clientes.setEstado(clientesDto.getEstado());
         clientes.setPais(clientesDto.getPais());
         clientes.setStatus(clientesDto.getStatus());
+
         clientesRepository.save(clientes);
+
+        if (clientesDto.getPlano() == null) {
+            PlanoEntity plano = new PlanoEntity();
+            plano.setId(clientes.getId());
+            plano.setPlano(TipoPlanoEnum.SEM_PLANO);
+            plano.setValor(null);
+        }
+
+        if (clientesDto.getPlano() != null) {
+            PlanoEntity plano = new PlanoEntity();
+
+            plano.setId(clientes.getId());
+
+            plano.setPlano(TipoPlanoEnum.valueOf(String.valueOf(clientesDto.getPlano())));
+            clientes.setPlano(plano);
+
+            if (plano.getPlano() == TipoPlanoEnum.PADRAO) {
+                plano.setValor(100.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.BASICO) {
+                plano.setValor(50.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.FAMILIA) {
+                plano.setValor(150.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.LUXO) {
+                plano.setValor(1500.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.COBERTURA) {
+                plano.setValor(1000.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.EXECUTIVO) {
+                plano.setValor(2600.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.NEGOCIOS) {
+                plano.setValor(5000.0);
+            }
+
+            if (plano.getPlano() == TipoPlanoEnum.LONGA_ESTADIA) {
+                plano.setValor(3000.0);
+            }
+            planoRepository.save(plano);
+
+        }
     }
 }
