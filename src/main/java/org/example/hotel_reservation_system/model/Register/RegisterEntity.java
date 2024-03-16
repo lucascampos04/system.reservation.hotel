@@ -3,7 +3,6 @@ package org.example.hotel_reservation_system.model.Register;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
@@ -38,10 +37,6 @@ public class RegisterEntity{
     @Column(name = "valor")
     private Double valor;
 
-    @Column(name = "pacote")
-    @Enumerated(EnumType.STRING)
-    @ColumnDefault("'DESATIVADO'")
-    private PacoteEnum pacoteEnum;
 
     @Column(name = "descricao")
     private String descricao;
