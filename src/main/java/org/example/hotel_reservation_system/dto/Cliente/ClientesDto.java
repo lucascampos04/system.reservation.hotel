@@ -1,5 +1,7 @@
 package org.example.hotel_reservation_system.dto.Cliente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
@@ -13,53 +15,91 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ClientesDto implements Serializable {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     Long id;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String nome;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String email;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String cpf;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String rg;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String endereco;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String cep;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String numero;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String estado;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String pais;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     StatusEnum status;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     LocalDateTime data_registro;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String data_nascimento;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     RolesEnum role;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     Double planoValor;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String plano;
 
     public ClientesDto() {}
 
     public static ClientesDto fromEntity(ClientesEntity entity) {
-        if (entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         PlanoEntity plano = entity.getPlano();
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
-
-        return new ClientesDto(
-                entity.getId(),
-                entity.getNome(),
-                entity.getEmail(),
-                entity.getCpf(),
-                entity.getRg(),
-                entity.getEndereco(),
-                entity.getCep(),
-                entity.getData_nascimento(),
-                entity.getNumero(),
-                entity.getEstado(),
-                entity.getPais(),
-                entity.getStatus(),
-                entity.getData_registro(),
-                entity.getRole(),
-                planoValor,
-                (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
-                planoNome
-        );
+        if (entity.getStatus().equals(StatusEnum.INATIVO) || entity.getStatus().equals(StatusEnum.DESATIVADO)){
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getStatus()
+            );
+        } else {
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getEmail(),
+                    entity.getCpf(),
+                    entity.getRg(),
+                    entity.getEndereco(),
+                    entity.getCep(),
+                    entity.getData_nascimento(),
+                    entity.getNumero(),
+                    entity.getEstado(),
+                    entity.getPais(),
+                    entity.getStatus(),
+                    entity.getData_registro(),
+                    entity.getRole(),
+                    planoValor,
+                    (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
+                    planoNome
+            );
+        }
     }
 
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
@@ -86,5 +126,11 @@ public class ClientesDto implements Serializable {
         if (status == StatusEnum.ATIVO) {
             this.planoValor = planoValorAtivo;
         }
+    }
+
+    public ClientesDto(Long id, String nome, StatusEnum status) {
+        this.id = id;
+        this.nome = nome;
+        this.status = status;
     }
 }

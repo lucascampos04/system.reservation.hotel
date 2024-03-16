@@ -104,7 +104,7 @@ public class PutCliente {
     }
 
     private boolean isValidStatus(String status) {
-        return status.equals("ATIVO") || status.equals("DESATIVADO");
+        return status.equals("ATIVO") || status.equals("DESATIVADO") || status.equals("INATIVO");
     }
 
     private boolean isValidCep(String cep) {

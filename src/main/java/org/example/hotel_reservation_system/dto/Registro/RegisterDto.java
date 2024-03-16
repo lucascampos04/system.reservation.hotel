@@ -1,8 +1,6 @@
 package org.example.hotel_reservation_system.dto.Registro;
 
 import lombok.Data;
-import lombok.Value;
-import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
@@ -21,7 +19,6 @@ public class RegisterDto implements Serializable {
     String forma_pagamento;
     StatusEnum status;
     Double valor;
-    PacoteEnum pacoteEnum;
     String descricao;
     LocalDateTime data_registro;
     ClientesEntity clientesEntity;
