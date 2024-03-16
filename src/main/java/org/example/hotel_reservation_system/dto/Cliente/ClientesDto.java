@@ -33,33 +33,55 @@ public class ClientesDto implements Serializable {
     public ClientesDto() {}
 
     public static ClientesDto fromEntity(ClientesEntity entity) {
-        if (entity == null) {
+        if (entity == null ) {
             return null;
         }
 
         PlanoEntity plano = entity.getPlano();
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
-
-        return new ClientesDto(
-                entity.getId(),
-                entity.getNome(),
-                entity.getEmail(),
-                entity.getCpf(),
-                entity.getRg(),
-                entity.getEndereco(),
-                entity.getCep(),
-                entity.getData_nascimento(),
-                entity.getNumero(),
-                entity.getEstado(),
-                entity.getPais(),
-                entity.getStatus(),
-                entity.getData_registro(),
-                entity.getRole(),
-                planoValor,
-                (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
-                planoNome
-        );
+        if (entity.getStatus() == StatusEnum.INATIVO){
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getEmail(),
+                    entity.getCpf(),
+                    entity.getRg(),
+                    entity.getEndereco(),
+                    entity.getCep(),
+                    entity.getData_nascimento(),
+                    entity.getNumero(),
+                    entity.getEstado(),
+                    entity.getPais(),
+                    entity.getStatus(),
+                    entity.getData_registro(),
+                    entity.getRole(),
+                    planoValor,
+                    (entity.getStatus() == StatusEnum.ATIVO)? planoValor : null,
+                    planoNome
+            );
+        } else if (entity.getStatus() != StatusEnum.INATIVO) {
+            return new ClientesDto(
+                    entity.getId(),
+                    entity.getNome(),
+                    entity.getEmail(),
+                    entity.getCpf(),
+                    entity.getRg(),
+                    entity.getEndereco(),
+                    entity.getCep(),
+                    entity.getData_nascimento(),
+                    entity.getNumero(),
+                    entity.getEstado(),
+                    entity.getPais(),
+                    entity.getStatus(),
+                    entity.getData_registro(),
+                    entity.getRole(),
+                    planoValor,
+                    (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
+                    planoNome
+            );
+        }
+        return null;
     }
 
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
