@@ -112,7 +112,7 @@ public class AddClienteService {
         return name != null && name.matches(nameRegex);
     }
     private boolean isValidStatus(String status){
-        return status.equals("ATIVO") || status.equals("DESATIVADO");
+        return status.equals("ATIVO") || status.equals("DESATIVADO") || status.equals("INATIVO");
     }
 
     private boolean isValidPlano(TipoPlanoEnum planoEnum){
@@ -178,7 +178,7 @@ public class AddClienteService {
         } while (clientesRepository.existsById(id));
         return id;
     }
-    
+
 
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
