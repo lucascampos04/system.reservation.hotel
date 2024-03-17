@@ -3,7 +3,9 @@ package org.example.hotel_reservation_system.model.Reservas;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusPagamentoEnum;
+import org.example.hotel_reservation_system.Enum.formaPagamento.FormaDePagemntoEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.time.LocalDateTime;
@@ -17,8 +19,13 @@ public class ReservasEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "pacote")
+    @Enumerated(EnumType.STRING)
+    private PacoteEnum pacote;
+
     @Column(name = "forma_pagamento")
-    private String formaPagamento;
+    @Enumerated(EnumType.STRING)
+    private FormaDePagemntoEnum formaPagamento;
 
     @Column(name = "valor")
     private Double valor;
@@ -29,6 +36,10 @@ public class ReservasEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private StatusPagamentoEnum statusPagamento;
+
+    @Column(name = "quantidade_pessoas")
+    private int quantidadePessoas;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private ClientesEntity clientes;
