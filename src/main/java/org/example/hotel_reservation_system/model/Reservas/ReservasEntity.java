@@ -43,4 +43,8 @@ public class ReservasEntity {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private ClientesEntity clientes;
+
+    public ReservasEntity() {
+
+    }
 }
