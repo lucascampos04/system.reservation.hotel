@@ -3,18 +3,23 @@ package org.example.hotel_reservation_system.services.Cliente.Patch;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.services.EmailServices.Client.NotifactionUpdateClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PatchServices {
 
     private final ClientesRepository clientesRepository;
+    private final NotifactionUpdateClient notifactionUpdateClient;
 
-    public PatchServices(ClientesRepository clientesRepository) {
+    public PatchServices(ClientesRepository clientesRepository, NotifactionUpdateClient notifactionUpdateClient) {
         this.clientesRepository = clientesRepository;
+        this.notifactionUpdateClient = notifactionUpdateClient;
     }
 
     public ResponseEntity<String> patchCliente(Long id, ClientesDto updates) {
@@ -22,8 +27,13 @@ public class PatchServices {
             Optional<ClientesEntity> optional = clientesRepository.findById(id);
             if (optional.isPresent()) {
                 ClientesEntity cliente = optional.get();
-                applyPartialUpdate(cliente, updates);
+                List<String> changeMessages = applyPartialUpdate(cliente, updates);
                 clientesRepository.save(cliente);
+
+                if (!changeMessages.isEmpty()) {
+                    notifactionUpdateClient.SendEmailUpdateClient(cliente.getEmail(), cliente.getNome(), changeMessages.toString());
+                }
+
                 return ResponseEntity.ok("Cliente atualizado com sucesso");
             } else {
                 return ResponseEntity.notFound().build();
@@ -33,74 +43,58 @@ public class PatchServices {
         }
     }
 
-    private void applyPartialUpdate(ClientesEntity cliente, ClientesDto updates) {
-        StringBuilder change = new StringBuilder("Alterações realizadas: \n");
-
-        String oldNome = cliente.getNome();
-        String oldEmail = cliente.getEmail();
-        String oldCpf = cliente.getCpf();
-        String oldRg = cliente.getRg();
-        String oldEndereco = cliente.getEndereco();
-        String oldCep = cliente.getCep();
-        String oldNumero = cliente.getNumero();
-        String oldEstado = cliente.getEstado();
-        String oldPais = cliente.getPais();
-        String oldData_nascimento = cliente.getData_nascimento();
-        String oldStatus = String.valueOf(cliente.getStatus());
-        String oldRole = String.valueOf(cliente.getRole());
+    private List<String> applyPartialUpdate(ClientesEntity cliente, ClientesDto updates) {
+        List<String> changeMessages = new ArrayList<>();
 
         if (updates.getNome() != null) {
-            change.append("Nome: ").append(oldNome).append(" -> ").append(updates.getNome()).append("\n");
+            changeMessages.add("Nome: " + cliente.getNome() + " -> " + updates.getNome());
             cliente.setNome(updates.getNome());
         }
         if (updates.getEmail() != null) {
-            change.append("Email: ").append(oldEmail).append(" -> ").append(updates.getEmail()).append("\n");
+            changeMessages.add("Email: " + cliente.getEmail() + " -> " + updates.getEmail());
             cliente.setEmail(updates.getEmail());
         }
         if (updates.getCpf() != null) {
-            change.append("CPF: ").append(oldCpf).append(" -> ").append(updates.getCpf()).append("\n");
+            changeMessages.add("CPF: " + cliente.getCpf() + " -> " + updates.getCpf());
             cliente.setCpf(updates.getCpf());
         }
         if (updates.getRg() != null) {
-            change.append("RG: ").append(oldRg).append(" -> ").append(updates.getRg()).append("\n");
+            changeMessages.add("RG: " + cliente.getRg() + " -> " + updates.getRg());
             cliente.setRg(updates.getRg());
         }
         if (updates.getEndereco() != null) {
-            change.append("Endereço: ").append(oldEndereco).append(" -> ").append(updates.getEndereco()).append("\n");
+            changeMessages.add("Endereço: " + cliente.getEndereco() + " -> " + updates.getEndereco());
             cliente.setEndereco(updates.getEndereco());
         }
         if (updates.getCep() != null) {
-            change.append("CEP: ").append(oldCep).append(" -> ").append(updates.getCep()).append("\n");
+            changeMessages.add("CEP: " + cliente.getCep() + " -> " + updates.getCep());
             cliente.setCep(updates.getCep());
         }
         if (updates.getNumero() != null) {
-            change.append("Número: ").append(oldNumero).append(" -> ").append(updates.getNumero()).append("\n");
+            changeMessages.add("Número: " + cliente.getNumero() + " -> " + updates.getNumero());
             cliente.setNumero(updates.getNumero());
         }
         if (updates.getEstado() != null) {
-            change.append("Estado: ").append(oldEstado).append(" -> ").append(updates.getEstado()).append("\n");
+            changeMessages.add("Estado: " + cliente.getEstado() + " -> " + updates.getEstado());
             cliente.setEstado(updates.getEstado());
         }
         if (updates.getPais() != null) {
-            change.append("País: ").append(oldPais).append(" -> ").append(updates.getPais()).append("\n");
+            changeMessages.add("País: " + cliente.getPais() + " -> " + updates.getPais());
             cliente.setPais(updates.getPais());
         }
         if (updates.getData_nascimento() != null) {
-            change.append("Data de nascimento: ").append(oldData_nascimento).append(" -> ").append(updates.getData_nascimento()).append("\n");
+            changeMessages.add("Data de nascimento: " + cliente.getData_nascimento() + " -> " + updates.getData_nascimento());
             cliente.setData_nascimento(updates.getData_nascimento());
         }
         if (updates.getStatus() != null) {
-            change.append("Status: ").append(oldStatus).append(" -> ").append(updates.getStatus()).append("\n");
+            changeMessages.add("Status: " + cliente.getStatus() + " -> " + updates.getStatus());
             cliente.setStatus(updates.getStatus());
         }
         if (updates.getRole() != null) {
-            change.append("Role: ").append(oldRole).append(" -> ").append(updates.getRole()).append("\n");
+            changeMessages.add("Role: " + cliente.getRole() + " -> " + updates.getRole());
             cliente.setRole(updates.getRole());
         }
 
-        if (!change.toString().equals("Alterações realizadas: \n")){
-            System.out.println(change.toString());
-        }
+        return changeMessages;
     }
-
 }
