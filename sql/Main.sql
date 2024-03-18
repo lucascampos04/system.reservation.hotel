@@ -25,3 +25,5 @@ where plano_id in (
 );
 
 select id, status from clientes;
+
+select * from reservas_entity;
