@@ -2,19 +2,19 @@ package org.example.hotel_reservation_system.test.GeneratorJson;
 
 import java.util.Random;
 
-public class GeneratorJson{
+public class GeneratorJson {
     public static void main(String[] args) {
         System.out.println("{");
         System.out.println("  \"nome\": \"" + generateName() + "\",");
         System.out.println("  \"email\": \"camposdlucasoli@gmail.com\",");
         System.out.println("  \"cpf\": \"" + generateCpf() + "\",");
-        System.out.println("  \"rg\": \"12.345.678-9\",");
-        System.out.println("  \"endereco\": \"Endereço Aleatório\",");
-        System.out.println("  \"cep\": \"12345678\",");
-        System.out.println("  \"numero\": 123,");
-        System.out.println("  \"estado\": \"Estado Aleatório\",");
-        System.out.println("  \"pais\": \"País Aleatório\",");
-        System.out.println("  \"data_nascimento\": \"1990-01-01T00:00:00\"");
+        System.out.println("  \"rg\": \"" + generateRg() + "\",");
+        System.out.println("  \"endereco\": \"" + generateAddress() + "\",");
+        System.out.println("  \"cep\": \"" + generateCep() + "\",");
+        System.out.println("  \"numero\": " + generateNumber() + ",");
+        System.out.println("  \"estado\": \"" + generateState() + "\",");
+        System.out.println("  \"pais\": \"" + generateCountry() + "\",");
+        System.out.println("  \"data_nascimento\": \"29/06/2004\"");
         System.out.println("}");
     }
 
@@ -78,5 +78,59 @@ public class GeneratorJson{
         cpfString.append(digitosVerificadores[1]);
 
         return cpfString.toString();
+    }
+
+    private static String generateRg() {
+        Random random = new Random();
+        StringBuilder rg = new StringBuilder();
+
+        for (int i = 0; i < 9; i++) {
+            rg.append(random.nextInt(10));
+            if (i == 2 || i == 5) {
+                rg.append(".");
+            } else if (i == 8) {
+                rg.append("-");
+            }
+        }
+
+        return rg.toString();
+    }
+
+    private static String generateAddress() {
+        String[] streets = {"Rua A", "Avenida B", "Praça C", "Travessa D", "Alameda E"};
+        String[] cities = {"City1", "City2", "City3", "City4", "City5"};
+        Random random = new Random();
+        return streets[random.nextInt(streets.length)] + ", " + random.nextInt(100) + ", " + cities[random.nextInt(cities.length)];
+    }
+
+    private static String generateCep() {
+        Random random = new Random();
+        StringBuilder cep = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            cep.append(random.nextInt(10));
+            if (i == 4) {
+                cep.append("-");
+            }
+        }
+
+        return cep.toString();
+    }
+
+    private static int generateNumber() {
+        Random random = new Random();
+        return random.nextInt(1000) + 1;
+    }
+
+    private static String generateState() {
+        String[] states = {"State1", "State2", "State3", "State4", "State5"};
+        Random random = new Random();
+        return states[random.nextInt(states.length)];
+    }
+
+    private static String generateCountry() {
+        String[] countries = {"Country1", "Country2", "Country3", "Country4", "Country5"};
+        Random random = new Random();
+        return countries[random.nextInt(countries.length)];
     }
 }
