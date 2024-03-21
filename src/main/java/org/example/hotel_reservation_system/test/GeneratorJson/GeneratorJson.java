@@ -2,12 +2,12 @@ package org.example.hotel_reservation_system.test.GeneratorJson;
 
 import java.util.Random;
 
-public class GeneratorJson {
+public class GeneratorJson{
     public static void main(String[] args) {
         System.out.println("{");
         System.out.println("  \"nome\": \"" + generateName() + "\",");
         System.out.println("  \"email\": \"camposdlucasoli@gmail.com\",");
-        System.out.println("  \"cpf\": \"12345678900\",");
+        System.out.println("  \"cpf\": \"" + generateCpf() + "\",");
         System.out.println("  \"rg\": \"12.345.678-9\",");
         System.out.println("  \"endereco\": \"Endereço Aleatório\",");
         System.out.println("  \"cep\": \"12345678\",");
@@ -35,5 +35,48 @@ public class GeneratorJson {
             }
         }
         return generator.toString();
+    }
+
+    private static String generateCpf() {
+        Random random = new Random();
+        int[] cpf = new int[9];
+
+        // Gerar os 9 primeiros dígitos do CPF
+        for (int i = 0; i < 9; i++) {
+            cpf[i] = random.nextInt(10); // Limite o intervalo de 0 a 9
+        }
+
+        // Calcular os dígitos verificadores do CPF
+        int[] digitosVerificadores = new int[2];
+        for (int i = 0; i < 2; i++) {
+            int soma = 0;
+            int multiplicador = 2 + i; // O primeiro multiplicador é 2 e o segundo é 3
+            for (int j = 0; j < cpf.length + i; j++) {
+                soma += cpf[j % cpf.length] * multiplicador;
+                multiplicador--;
+                if (multiplicador < 2) {
+                    multiplicador = 9; // Reinicia o multiplicador
+                }
+            }
+            digitosVerificadores[i] = 11 - (soma % 11);
+            if (digitosVerificadores[i] >= 10) {
+                digitosVerificadores[i] = 0;
+            }
+        }
+
+        // Formatar o CPF como string
+        StringBuilder cpfString = new StringBuilder();
+        for (int i = 0; i < cpf.length; i++) {
+            cpfString.append(cpf[i]);
+            if (i == 2 || i == 5) {
+                cpfString.append(".");
+            } else if (i == 8) {
+                cpfString.append("-");
+            }
+        }
+        cpfString.append(digitosVerificadores[0]);
+        cpfString.append(digitosVerificadores[1]);
+
+        return cpfString.toString();
     }
 }
