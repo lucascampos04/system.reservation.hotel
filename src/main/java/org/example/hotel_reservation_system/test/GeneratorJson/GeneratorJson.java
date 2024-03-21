@@ -1,5 +1,9 @@
 package org.example.hotel_reservation_system.test.GeneratorJson;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GeneratorJson {
@@ -16,7 +20,41 @@ public class GeneratorJson {
         System.out.println("  \"pais\": \"" + generateCountry() + "\",");
         System.out.println("  \"data_nascimento\": \"29/06/2004\"");
         System.out.println("}");
+
+        try {
+            Robot robot = new Robot();
+            robot.delay(2000); // Espera 2 segundos antes de pressionar a tecla
+            robot.keyPress(KeyEvent.VK_C); // Pressiona a tecla "c"
+            robot.keyRelease(KeyEvent.VK_C); // Libera a tecla "c"
+            copyToClipboard(getPrintedContent()); // Copia o conteúdo do print para a área de transferência
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
     }
+
+    private static String getPrintedContent() {
+        StringBuilder printedContent = new StringBuilder();
+        printedContent.append("{\n");
+        printedContent.append("  \"nome\": \"" + generateName() + "\",\n");
+        printedContent.append("  \"email\": \"camposdlucasoli@gmail.com\",\n");
+        printedContent.append("  \"cpf\": \"" + generateCpf() + "\",\n");
+        printedContent.append("  \"rg\": \"" + generateRg() + "\",\n");
+        printedContent.append("  \"endereco\": \"" + generateAddress() + "\",\n");
+        printedContent.append("  \"cep\": \"" + generateCep() + "\",\n");
+        printedContent.append("  \"numero\": " + generateNumber() + ",\n");
+        printedContent.append("  \"estado\": \"" + generateState() + "\",\n");
+        printedContent.append("  \"pais\": \"" + generateCountry() + "\",\n");
+        printedContent.append("  \"data_nascimento\": \"29/06/2004\"\n");
+        printedContent.append("}");
+        return printedContent.toString();
+    }
+
+    private static void copyToClipboard(String content) {
+        StringSelection selection = new StringSelection(content);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
+    }
+
 
     private static String generateName() {
         String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
