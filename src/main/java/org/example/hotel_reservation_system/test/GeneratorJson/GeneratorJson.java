@@ -7,10 +7,11 @@ import java.util.Random;
 
 public class GeneratorJson {
     static String email = "camposdlucasoli@gmail.com";
-    public static void main(String[] args) {
+    public static String main() {
         String json = generateJson();
         System.out.println(json);
         copyToClipboard(json);
+        return json;
     }
 
     private static String generateJson() {
