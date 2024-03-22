@@ -25,7 +25,7 @@ public class ClienteController {
         this.listAllClientesServices = listAllClientesServices;
         this.patchServices = patchServices;
     }
-    @PostMapping("/add/clientes")
+    @PostMapping("/post/add/clientes")
     public ResponseEntity<String> cadastrarCliente(@RequestBody ClientesDto clientesDto){
         try{
             return addClienteService.AdicionarCliente(clientesDto);
