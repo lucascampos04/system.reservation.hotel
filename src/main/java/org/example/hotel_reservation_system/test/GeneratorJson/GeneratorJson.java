@@ -1,5 +1,7 @@
 package org.example.hotel_reservation_system.test.GeneratorJson;
 
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -26,7 +28,7 @@ public class GeneratorJson {
                 "  \"estado\": \"" + generateState() + "\",\n" +
                 "  \"pais\": \"" + generateCountry() + "\",\n" +
                 "  \"data_nascimento\": \"29/06/2004\",\n" +
-                "  \"plano\": \"BASICO\"\n" +
+                "  \"pais\": \"" + generatePlans() + "\",\n" +
                 "}";
     }
 
@@ -92,6 +94,18 @@ public class GeneratorJson {
         return states[random.nextInt(states.length)];
     }
 
+    private static String generatePlans(){
+        TipoPlanoEnum[] plansEnums = TipoPlanoEnum.values();
+        String[] plans = new String[plansEnums.length];
+
+        for (int i = 0; i < plansEnums.length; i++) {
+            plans[i] = plansEnums[i].toString();
+        }
+
+        Random random = new Random();
+        return plans[random.nextInt(plans.length)];
+    }
+
     private static String generateCountry() {
         String[] countries = {"Country", "Country", "Country", "Country", "Country"};
         Random random = new Random();
@@ -103,4 +117,6 @@ public class GeneratorJson {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
     }
+
+
 }
