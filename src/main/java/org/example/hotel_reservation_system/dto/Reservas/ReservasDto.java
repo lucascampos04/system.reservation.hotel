@@ -4,6 +4,7 @@ import lombok.Value;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusPagamentoEnum;
 import org.example.hotel_reservation_system.Enum.formaPagamento.FormaDePagemntoEnum;
+import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,17 @@ public class ReservasDto implements Serializable {
     StatusPagamentoEnum statusPagamento;
     int quantidadePessoas;
 
+    public static ReservasDto fromEntity(ReservasEntity entity){
+        return new ReservasDto(
+                entity.getId(),
+                entity.getPacote(),
+                entity.getFormaPagamento(),
+                entity.getValor(),
+                entity.getDataPagamento(),
+                entity.getStatusPagamento(),
+                entity.getQuantidadePessoas()
+        );
+    }
 
     public ReservasDto(Long id, PacoteEnum pacote,
                        FormaDePagemntoEnum formaPagamento,
