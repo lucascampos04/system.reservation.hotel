@@ -215,7 +215,6 @@ public class AddClienteService {
 
             clientes.setPlano(plano);
 
-
             if (plano.getPlano() == TipoPlanoEnum.SEM_PLANO){
                 plano.setValor(0.0);
             }
@@ -261,7 +260,6 @@ public class AddClienteService {
             }
             planoRepository.save(plano);
         }
-
         return clientes;
     }
 }

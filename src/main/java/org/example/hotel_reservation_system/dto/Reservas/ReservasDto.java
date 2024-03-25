@@ -1,5 +1,7 @@
 package org.example.hotel_reservation_system.dto.Reservas;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Value;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusPagamentoEnum;
@@ -12,7 +14,8 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link org.example.hotel_reservation_system.model.Reservas.ReservasEntity}
  */
-@Value
+@Getter
+@Setter
 public class ReservasDto implements Serializable {
     Long id;
     PacoteEnum pacote;
