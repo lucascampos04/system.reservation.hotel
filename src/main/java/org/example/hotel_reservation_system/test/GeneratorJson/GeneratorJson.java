@@ -28,7 +28,7 @@ public class GeneratorJson {
                 "  \"estado\": \"" + generateState() + "\",\n" +
                 "  \"pais\": \"" + generateCountry() + "\",\n" +
                 "  \"data_nascimento\": \"29/06/2004\",\n" +
-                "  \"pais\": \"" + generatePlans() + "\",\n" +
+                "  \"plano\": \"" + generatePlans() + "\",\n" +
                 "}";
     }
 
