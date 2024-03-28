@@ -40,9 +40,8 @@ public class ReservasEntity {
     @Column(name = "quantidade_pessoas")
     private int quantidadePessoas;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private ClientesEntity clientes;
+    @Column(name = "cliente_id")
+    private Long clienteId;
 
     public ReservasEntity() {
 
