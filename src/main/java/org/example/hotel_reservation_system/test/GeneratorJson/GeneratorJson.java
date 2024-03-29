@@ -12,7 +12,6 @@ public class GeneratorJson {
     public static String main() {
         String json = generateJson();
         System.out.println(json);
-        copyToClipboard(json);
         return json;
     }
 
@@ -111,12 +110,5 @@ public class GeneratorJson {
         Random random = new Random();
         return countries[random.nextInt(countries.length)];
     }
-
-    private static void copyToClipboard(String content) {
-        StringSelection selection = new StringSelection(content);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
-    }
-
 
 }
