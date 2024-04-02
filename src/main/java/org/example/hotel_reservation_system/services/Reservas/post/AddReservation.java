@@ -5,6 +5,7 @@ import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
+import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +35,22 @@ public class AddReservation {
 
     private ReservasEntity getDads(ReservasDto reservasDto) {
         ReservasEntity reservasEntity = new ReservasEntity();
+
         reservasEntity.setId(genertatorId());
         reservasEntity.setPackageName(reservasDto.getPackageName());
         reservasEntity.setData_checkin(LocalDateTime.now());
-        reservasEntity.setValor(reservasDto.getValor());
+
 
         if (reservasDto.getIdCliente() != null){
             Optional<ClientesEntity> clientesOptional = clientesRepository.findById(reservasDto.getIdCliente());
             clientesOptional.ifPresent(clientes -> {
+
+                Double valueDIscount = DiscountsReservaServices.appluyDiscount(reservasDto.getValor(), clientes.getPlano().getPlano());
+                reservasEntity.setValor(valueDIscount);
+
                 reservasDto.setNome(clientes.getNome());
                 reservasDto.setEmailCliente(clientes.getEmail());
+                reservasDto.setPlanoCliente(clientes.getPlano().getPlano());
                 reservasEntity.setCliente(clientes);
             });
         }

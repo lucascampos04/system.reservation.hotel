@@ -3,6 +3,7 @@ package org.example.hotel_reservation_system.dto.Reservas;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 
@@ -37,6 +38,9 @@ public class ReservasDto implements Serializable {
     private String emailCliente;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private TipoPlanoEnum planoCliente;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private ClientesEntity cliente;
 
     public static ReservasDto fromEntity(ReservasEntity entity){
@@ -48,7 +52,8 @@ public class ReservasDto implements Serializable {
                     entity.getValor(),
                     entity.getCliente().getNome(),
                     entity.getCliente().getId(),
-                    entity.getCliente().getEmail()
+                    entity.getCliente().getEmail(),
+                    entity.getCliente().getPlano().getPlano()
             );
         } else {
             return new ReservasDto(
@@ -58,6 +63,7 @@ public class ReservasDto implements Serializable {
                     entity.getValor(),
                     null,
                     null,
+                    null,
                     null
             );
         }
@@ -65,7 +71,7 @@ public class ReservasDto implements Serializable {
 
     public ReservasDto(Long id, PacoteEnum packageName,
                        LocalDateTime data_checkin,
-                       Double valor, String nome, Long idCliente, String emailCliente) {
+                       Double valor, String nome, Long idCliente, String emailCliente, TipoPlanoEnum planoCliente) {
         this.id = id;
         this.packageName = packageName;
         this.data_checkin = data_checkin;
@@ -73,5 +79,6 @@ public class ReservasDto implements Serializable {
         this.nome = nome;
         this.idCliente = idCliente;
         this.emailCliente = emailCliente;
+        this.planoCliente = planoCliente;
     }
 }
