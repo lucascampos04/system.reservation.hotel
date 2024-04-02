@@ -1,5 +1,6 @@
 package org.example.hotel_reservation_system.services.Reservas.post;
 
+import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
@@ -24,6 +25,12 @@ public class AddReservation {
 
     public ResponseEntity<String> addReservation(ReservasDto reservasDto) {
         try {
+
+            String validarCampos = validarCamposPatterns(reservasDto);
+            if (validarCampos != null){
+                return ResponseEntity.badRequest().body("Error: " + validarCampos);
+            }
+
             ReservasEntity reservasEntity = getDads(reservasDto);
             reservasRepository.save(reservasEntity);
             return ResponseEntity.ok("Reserva adicionada com sucesso");
@@ -31,6 +38,18 @@ public class AddReservation {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao adicionar reserva");
         }
+    }
+
+    private String validarCamposPatterns(ReservasDto reservasDto) {
+        if (!isValidPackageName(reservasDto.getPackageName())){
+            return "Pacote inválido";
+        }
+
+        if (!containsWhitespace(String.valueOf(reservasDto.getId()))){
+            return "Id invalido";
+        }
+
+        return null;
     }
 
     private ReservasEntity getDads(ReservasDto reservasDto) {
@@ -58,6 +77,25 @@ public class AddReservation {
         return reservasEntity;
     }
 
+    private boolean isValidPackageName(PacoteEnum packageNameEnum) {
+        String[] packageNames = {
+                String.valueOf(PacoteEnum.DIARIA),
+                String.valueOf(PacoteEnum.MENSAL),
+                String.valueOf(PacoteEnum.ANUAL),
+                String.valueOf(PacoteEnum.BIMESTRAL),
+                String.valueOf(PacoteEnum.TRIMESTRAL),
+                String.valueOf(PacoteEnum.SEMESTRAL),
+                String.valueOf(PacoteEnum.SEMANAL),
+        };
+
+        for (int i = 0; i < packageNames.length; i++){
+            if (packageNames.equals(String.valueOf(packageNameEnum))){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Long genertatorId() {
         long id = 0;
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -65,5 +103,9 @@ public class AddReservation {
             id = 100000000 + random.nextLong(999999999);
         } while (reservasRepository.existsById(id));
         return id;
+    }
+
+    private boolean containsWhitespace(String value) {
+        return value != null && value.contains(" ");
     }
 }
