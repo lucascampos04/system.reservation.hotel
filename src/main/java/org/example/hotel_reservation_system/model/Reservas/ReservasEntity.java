@@ -25,6 +25,12 @@ public class ReservasEntity {
     @Column(name = "valor")
     private Double valor;
 
+    @Column(name = "valor_sem_desconto")
+    private Double valorSemDesconto;
+
+    @Column(name = "desconto_aplicado")
+    private String descontoAplicado;
+
     @Column(name = "data_checkin")
     private LocalDateTime data_checkin;
 

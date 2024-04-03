@@ -68,8 +68,11 @@ public class AddReservation {
             clientesOptional.ifPresent(clientes -> {
 
                 Double applyPriceInPackages = ApplyPriceInPackagesService.applyPriceInPlans(reservasDto.getValor(), reservasDto.getPackageName());
-                Double valueDIscount = DiscountsReservaServices.appluyDiscount(applyPriceInPackages, clientes.getPlano().getPlano());
-                reservasEntity.setValor(valueDIscount);
+                Double valueDiscount = DiscountsReservaServices.applyDiscount(applyPriceInPackages, clientes.getPlano().getPlano());
+
+                reservasEntity.setValorSemDesconto(applyPriceInPackages);
+
+                reservasEntity.setValor(valueDiscount);
 
                 reservasDto.setNomeCliente(clientes.getNome());
                 reservasDto.setEmailCliente(clientes.getEmail());
