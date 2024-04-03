@@ -31,6 +31,9 @@ public class ReservasDto implements Serializable {
     Double valor;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    Double valorSemDesconto;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String nomeCliente;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,6 +52,7 @@ public class ReservasDto implements Serializable {
     private StatusEnum status;
 
 
+
     public static ReservasDto fromEntity(ReservasEntity entity){
         if (entity.getCliente() != null) {
             return new ReservasDto(
@@ -61,7 +65,8 @@ public class ReservasDto implements Serializable {
                     entity.getCliente().getEmail(),
                     entity.getCliente().getPlano().getPlano(),
                     entity.getCliente().getRole(),
-                    entity.getStatus()
+                    entity.getStatus(),
+                    entity.getValorSemDesconto()
             );
         } else {
             return new ReservasDto(
@@ -74,7 +79,9 @@ public class ReservasDto implements Serializable {
                     null,
                     null,
                     null,
+                    null,
                     null
+
             );
         }
     }
@@ -82,7 +89,8 @@ public class ReservasDto implements Serializable {
     public ReservasDto(Long id, PacoteEnum packageName,
                        LocalDateTime data_checkin,
                        Double valor, String nomeCliente, Long idCliente, String emailCliente, TipoPlanoEnum planoCliente, RolesEnum role,
-                       StatusEnum status) {
+                       StatusEnum status,
+                       Double valorSemDesconto) {
         this.id = id;
         this.packageName = packageName;
         this.data_checkin = data_checkin;
@@ -93,5 +101,6 @@ public class ReservasDto implements Serializable {
         this.planoCliente = planoCliente;
         this.roleCliente = role;
         this.status = status;
+        this.valorSemDesconto = valorSemDesconto;
     }
 }
