@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
+import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class ReservasEntity {
     private Long id;
 
     @Column(name = "package_name")
+    @Enumerated(EnumType.STRING)
     private PacoteEnum packageName;
 
     @Column(name = "valor")
@@ -25,6 +27,10 @@ public class ReservasEntity {
 
     @Column(name = "data_checkin")
     private LocalDateTime data_checkin;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
 
     @ManyToOne
     private ClientesEntity cliente;

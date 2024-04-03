@@ -1,11 +1,14 @@
 package org.example.hotel_reservation_system.services.Reservas.post;
 
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
+import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
+import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
+import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
 import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,12 +28,6 @@ public class AddReservation {
 
     public ResponseEntity<String> addReservation(ReservasDto reservasDto) {
         try {
-
-            String validarCampos = validarCamposPatterns(reservasDto);
-            if (validarCampos != null){
-                return ResponseEntity.badRequest().body("Error: " + validarCampos);
-            }
-
             ReservasEntity reservasEntity = getDads(reservasDto);
             reservasRepository.save(reservasEntity);
             return ResponseEntity.ok("Reserva adicionada com sucesso");
@@ -59,17 +56,25 @@ public class AddReservation {
         reservasEntity.setPackageName(reservasDto.getPackageName());
         reservasEntity.setData_checkin(LocalDateTime.now());
 
+        if (reservasDto.getIdCliente() != null){
+            reservasEntity.setStatus(StatusEnum.ATIVO);
+        } else {
+            reservasEntity.setStatus(StatusEnum.INATIVO);
+        }
+
 
         if (reservasDto.getIdCliente() != null){
             Optional<ClientesEntity> clientesOptional = clientesRepository.findById(reservasDto.getIdCliente());
             clientesOptional.ifPresent(clientes -> {
 
-                Double valueDIscount = DiscountsReservaServices.appluyDiscount(reservasDto.getValor(), clientes.getPlano().getPlano());
+                Double applyPriceInPackages = ApplyPriceInPackagesService.applyPriceInPlans(reservasDto.getValor(), reservasDto.getPackageName());
+                Double valueDIscount = DiscountsReservaServices.appluyDiscount(applyPriceInPackages, clientes.getPlano().getPlano());
                 reservasEntity.setValor(valueDIscount);
 
-                reservasDto.setNome(clientes.getNome());
+                reservasDto.setNomeCliente(clientes.getNome());
                 reservasDto.setEmailCliente(clientes.getEmail());
                 reservasDto.setPlanoCliente(clientes.getPlano().getPlano());
+                reservasDto.setRoleCliente(clientes.getRole());
                 reservasEntity.setCliente(clientes);
             });
         }

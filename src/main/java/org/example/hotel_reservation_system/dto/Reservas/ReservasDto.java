@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
+import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 
@@ -29,7 +31,7 @@ public class ReservasDto implements Serializable {
     Double valor;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String nome;
+    String nomeCliente;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Long idCliente;
@@ -41,7 +43,11 @@ public class ReservasDto implements Serializable {
     private TipoPlanoEnum planoCliente;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ClientesEntity cliente;
+    private RolesEnum roleCliente;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private StatusEnum status;
+
 
     public static ReservasDto fromEntity(ReservasEntity entity){
         if (entity.getCliente() != null) {
@@ -53,7 +59,9 @@ public class ReservasDto implements Serializable {
                     entity.getCliente().getNome(),
                     entity.getCliente().getId(),
                     entity.getCliente().getEmail(),
-                    entity.getCliente().getPlano().getPlano()
+                    entity.getCliente().getPlano().getPlano(),
+                    entity.getCliente().getRole(),
+                    entity.getStatus()
             );
         } else {
             return new ReservasDto(
@@ -64,6 +72,8 @@ public class ReservasDto implements Serializable {
                     null,
                     null,
                     null,
+                    null,
+                    null,
                     null
             );
         }
@@ -71,14 +81,17 @@ public class ReservasDto implements Serializable {
 
     public ReservasDto(Long id, PacoteEnum packageName,
                        LocalDateTime data_checkin,
-                       Double valor, String nome, Long idCliente, String emailCliente, TipoPlanoEnum planoCliente) {
+                       Double valor, String nomeCliente, Long idCliente, String emailCliente, TipoPlanoEnum planoCliente, RolesEnum role,
+                       StatusEnum status) {
         this.id = id;
         this.packageName = packageName;
         this.data_checkin = data_checkin;
         this.valor = valor;
-        this.nome = nome;
+        this.nomeCliente = nomeCliente;
         this.idCliente = idCliente;
         this.emailCliente = emailCliente;
         this.planoCliente = planoCliente;
+        this.roleCliente = role;
+        this.status = status;
     }
 }
