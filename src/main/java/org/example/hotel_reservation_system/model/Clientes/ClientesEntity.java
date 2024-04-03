@@ -2,6 +2,7 @@ package org.example.hotel_reservation_system.model.Clientes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
@@ -69,5 +70,29 @@ public class ClientesEntity{
         return status;
     }
 
+    public ClientesEntity(){
 
+    }
+    public ClientesEntity(Long id, String nome, String email,
+                          String cpf, String rg, String endereco,
+                          String cep, String numero,
+                          String estado, String pais, String data_nascimento,
+                          StatusEnum status, LocalDateTime data_registro,
+                          RolesEnum role, PlanoEntity plano) {
+        Id = id;
+        this.nome = nome;
+        this.email = email;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.endereco = endereco;
+        this.cep = cep;
+        this.numero = numero;
+        this.estado = estado;
+        this.pais = pais;
+        this.data_nascimento = data_nascimento;
+        this.status = status;
+        this.data_registro = data_registro;
+        this.role = role;
+        this.plano = plano;
+    }
 }
