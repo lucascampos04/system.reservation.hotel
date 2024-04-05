@@ -1,7 +1,6 @@
 package org.example.hotel_reservation_system.services.Reservas.post;
 
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
-import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
@@ -10,6 +9,7 @@ import org.example.hotel_reservation_system.repository.Clientes.ClientesReposito
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
 import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
 import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
+import org.example.hotel_reservation_system.services.EmailServices.Reservas.NotificationReservaCongratulations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +21,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AddReservation {
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
-    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository) {
+
+    private final NotificationReservaCongratulations notificationReservaCongratulations;
+    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, NotificationReservaCongratulations notificationReservaCongratulations) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
+        this.notificationReservaCongratulations = notificationReservaCongratulations;
     }
 
     public ResponseEntity<String> addReservation(ReservasDto reservasDto) {
         try {
             ReservasEntity reservasEntity = getDads(reservasDto);
             reservasRepository.save(reservasEntity);
+            
+                notificationReservaCongratulations.SendEmailReservaCongratulations(reservasDto.getNomeCliente(), reservasEntity.getValorSemDesconto(), reservasDto.getEmailCliente());
+
+
             return ResponseEntity.ok("Reserva adicionada com sucesso");
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +86,9 @@ public class AddReservation {
                 reservasDto.setPlanoCliente(clientes.getPlano().getPlano());
                 reservasDto.setRoleCliente(clientes.getRole());
                 reservasEntity.setCliente(clientes);
+
+
+
             });
         }
 
