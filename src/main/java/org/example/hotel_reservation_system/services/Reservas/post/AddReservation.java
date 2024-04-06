@@ -6,6 +6,7 @@ import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.repository.Employees.EmployeesRepository;
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
 import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
 import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
@@ -21,11 +22,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AddReservation {
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
+    private final EmployeesRepository employeesRepository;
 
     private final NotificationReservaCongratulations notificationReservaCongratulations;
-    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, NotificationReservaCongratulations notificationReservaCongratulations) {
+    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, EmployeesRepository employeesRepository, NotificationReservaCongratulations notificationReservaCongratulations) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
+        this.employeesRepository = employeesRepository;
         this.notificationReservaCongratulations = notificationReservaCongratulations;
     }
 
