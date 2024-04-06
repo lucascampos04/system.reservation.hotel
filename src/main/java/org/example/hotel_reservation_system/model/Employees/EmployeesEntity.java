@@ -1,21 +1,14 @@
 package org.example.hotel_reservation_system.model.Employees;
 
-import java.time.LocalDateTime;
-
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
 import org.example.hotel_reservation_system.Enum.Contratos.ContratosEmployees;
 import org.example.hotel_reservation_system.Enum.Status.StatusEmployees;
 import org.hibernate.annotations.ColumnDefault;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Entity(name = "employees")
 @Getter
@@ -24,7 +17,6 @@ public class EmployeesEntity {
     public static final String ResponseEntity = null;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
     @Column(name = "nome")
