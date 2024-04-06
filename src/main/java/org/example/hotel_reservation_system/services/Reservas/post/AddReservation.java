@@ -67,6 +67,7 @@ public class AddReservation {
         reservasEntity.setId(genertatorId());
         reservasEntity.setPackageName(reservasDto.getPackageName());
         reservasEntity.setData_checkin(LocalDateTime.now());
+        reservasEntity.setFormaPagamento(reservasDto.getFormaPagamento());
 
         if (reservasDto.getIdCliente() != null){
             reservasEntity.setStatus(StatusEnum.ATIVO);
@@ -91,9 +92,6 @@ public class AddReservation {
                 reservasDto.setPlanoCliente(clientes.getPlano().getPlano());
                 reservasDto.setRoleCliente(clientes.getRole());
                 reservasEntity.setCliente(clientes);
-
-
-
             });
         }
 

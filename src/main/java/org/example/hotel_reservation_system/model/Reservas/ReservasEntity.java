@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Enum.formaPagamento.FormaDePagemntoEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,10 @@ public class ReservasEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
+
+    @Column(name = "forma_pagamento")
+    @Enumerated(EnumType.STRING)
+    private FormaDePagemntoEnum formaPagamento;
 
     @ManyToOne
     private ClientesEntity cliente;
