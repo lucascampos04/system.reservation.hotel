@@ -60,7 +60,7 @@ public class EmployeesDto implements Serializable {
 
     public EmployeesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep, String numero, String estado,
                         String pais, String dataNascimeo, StatusEmployees status, CargoEmployees cargo, ContratosEmployees contratos, LocalDateTime data_registro, Double salario) {
-        Id = id;
+        this.Id = id;
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
