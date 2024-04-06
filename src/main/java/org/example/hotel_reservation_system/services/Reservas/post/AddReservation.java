@@ -24,11 +24,13 @@ public class AddReservation {
     private final ClientesRepository clientesRepository;
     private final EmployeesRepository employeesRepository;
 
+    private final DiscountsReservaServices discountsReservaServices;
     private final NotificationReservaCongratulations notificationReservaCongratulations;
-    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, EmployeesRepository employeesRepository, NotificationReservaCongratulations notificationReservaCongratulations) {
+    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, EmployeesRepository employeesRepository, DiscountsReservaServices discountsReservaServices, NotificationReservaCongratulations notificationReservaCongratulations) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
         this.employeesRepository = employeesRepository;
+        this.discountsReservaServices = discountsReservaServices;
         this.notificationReservaCongratulations = notificationReservaCongratulations;
     }
 
@@ -78,7 +80,7 @@ public class AddReservation {
             clientesOptional.ifPresent(clientes -> {
 
                 Double applyPriceInPackages = ApplyPriceInPackagesService.applyPriceInPlans(reservasDto.getValor(), reservasDto.getPackageName());
-                Double valueDiscount = DiscountsReservaServices.applyDiscount(applyPriceInPackages, clientes.getPlano().getPlano());
+                Double valueDiscount = discountsReservaServices.applyDiscount(applyPriceInPackages, clientes.getPlano().getPlano());
 
                 reservasEntity.setValorSemDesconto(applyPriceInPackages);
 
