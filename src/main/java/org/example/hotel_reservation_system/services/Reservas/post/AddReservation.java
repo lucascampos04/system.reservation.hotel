@@ -10,6 +10,7 @@ import org.example.hotel_reservation_system.repository.Employees.EmployeesReposi
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
 import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
 import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
+import org.example.hotel_reservation_system.services.EmailServices.PaymentsSuccess.NotificationPaymentSuccessServices;
 import org.example.hotel_reservation_system.services.EmailServices.Reservas.NotificationReservaCongratulations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AddReservation {
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
-    private final EmployeesRepository employeesRepository;
-
     private final DiscountsReservaServices discountsReservaServices;
     private final NotificationReservaCongratulations notificationReservaCongratulations;
-    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, EmployeesRepository employeesRepository, DiscountsReservaServices discountsReservaServices, NotificationReservaCongratulations notificationReservaCongratulations) {
+    private final NotificationPaymentSuccessServices notificationPaymentSuccessServices;
+    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, DiscountsReservaServices discountsReservaServices, NotificationReservaCongratulations notificationReservaCongratulations, NotificationPaymentSuccessServices notificationPaymentSuccessServices) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
-        this.employeesRepository = employeesRepository;
         this.discountsReservaServices = discountsReservaServices;
         this.notificationReservaCongratulations = notificationReservaCongratulations;
+        this.notificationPaymentSuccessServices = notificationPaymentSuccessServices;
     }
 
     public ResponseEntity<String> addReservation(ReservasDto reservasDto) {
@@ -39,8 +39,8 @@ public class AddReservation {
             ReservasEntity reservasEntity = getDads(reservasDto);
             reservasRepository.save(reservasEntity);
             
-                notificationReservaCongratulations.SendEmailReservaCongratulations(reservasDto.getNomeCliente(), reservasEntity.getValorSemDesconto(), reservasDto.getEmailCliente());
-
+            notificationReservaCongratulations.SendEmailReservaCongratulations(reservasDto.getNomeCliente(), reservasEntity.getValor(), reservasDto.getEmailCliente());
+            notificationPaymentSuccessServices.SendEmailPaymentCongratulations(reservasDto.getNomeCliente(), reservasEntity.getValor(), reservasDto.getEmailCliente(), reservasDto.getFormaPagamento());
 
             return ResponseEntity.ok("Reserva adicionada com sucesso");
         } catch (Exception e) {
