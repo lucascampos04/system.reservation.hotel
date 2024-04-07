@@ -5,6 +5,7 @@ import lombok.Data;
 import org.example.hotel_reservation_system.Enum.Pacote.PacoteEnum;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
+import org.example.hotel_reservation_system.Enum.formaPagamento.FormaDePagemntoEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
@@ -51,6 +52,8 @@ public class ReservasDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private StatusEnum status;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private FormaDePagemntoEnum formaPagamento;
 
 
     public static ReservasDto fromEntity(ReservasEntity entity){
@@ -66,7 +69,8 @@ public class ReservasDto implements Serializable {
                     entity.getCliente().getPlano().getPlano(),
                     entity.getCliente().getRole(),
                     entity.getStatus(),
-                    entity.getValorSemDesconto()
+                    entity.getValorSemDesconto(),
+                    entity.getFormaPagamento()
             );
         } else {
             return new ReservasDto(
@@ -74,6 +78,7 @@ public class ReservasDto implements Serializable {
                     entity.getPackageName(),
                     entity.getData_checkin(),
                     entity.getValor(),
+                    null,
                     null,
                     null,
                     null,
@@ -90,7 +95,8 @@ public class ReservasDto implements Serializable {
                        LocalDateTime data_checkin,
                        Double valor, String nomeCliente, Long idCliente, String emailCliente, TipoPlanoEnum planoCliente, RolesEnum role,
                        StatusEnum status,
-                       Double valorSemDesconto) {
+                       Double valorSemDesconto,
+                       FormaDePagemntoEnum formaPagamento) {
         this.id = id;
         this.packageName = packageName;
         this.data_checkin = data_checkin;
@@ -102,5 +108,6 @@ public class ReservasDto implements Serializable {
         this.roleCliente = role;
         this.status = status;
         this.valorSemDesconto = valorSemDesconto;
+        this.formaPagamento = formaPagamento;
     }
 }
