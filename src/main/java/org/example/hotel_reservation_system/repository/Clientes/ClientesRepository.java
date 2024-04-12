@@ -11,10 +11,11 @@ public interface ClientesRepository extends JpaRepository<ClientesEntity, Long>{
 
     boolean existsByEmail(String email);
     boolean existsByCpf(String cpf);
-    boolean existsByRg(String rg);
 
     Optional<ClientesEntity> findByRgAndIdNot(String rg, Long id);
     Optional<ClientesEntity> findByCpfAndIdNot(String cpf, Long id);
 
     ClientesEntity findByEmail(String email);
+
+    boolean existsByRg(String rgUpdate);
 }
