@@ -9,6 +9,9 @@ import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
 import org.example.hotel_reservation_system.repository.Plano.PlanoRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Client.NotificationClientInsert;
+import org.example.hotel_reservation_system.services.patterns.FieldsExisting.MainFieldExisting;
+import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAplicationValues;
+import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +37,13 @@ public class AddClienteService {
     public ResponseEntity<String> AdicionarCliente(ClientesDto clientesDto){
         try {
             String messageErroValidationField = verificarCampoExistente(clientesDto);
-            String validarCampos = validarCamposPattern(clientesDto);
-
+            ResponseEntity<String> messageErroValidationRegex = realizedValidationsRegex(clientesDto);
+            if (messageErroValidationRegex != null){
+                return messageErroValidationRegex;
+            }
             if (messageErroValidationField != null){
                 return ResponseEntity.badRequest().body("Error : " + messageErroValidationField);
             }
-
-            if (validarCampos != null){
-                return ResponseEntity.badRequest().body("Error : " + validarCampos);
-            }
-
             ClientesEntity clientesEntity = getDads(clientesDto);
             clientesRepository.save(clientesEntity);
 
@@ -54,124 +54,38 @@ public class AddClienteService {
             return ResponseEntity.badRequest().body("Erro ao inserir cliente");
         }
     }
+    private String verificarCampoExistente(ClientesDto clientesDto){
+        String cpf = clientesDto.getCpf();
+        String rg = clientesDto.getRg();
 
-    private String validarCamposPattern(ClientesDto clientesDto){
-        if (clientesDto.getStatus() == null){
-            clientesDto.setStatus(StatusEnum.ATIVO);
-        }
+        String cpfValidationMessage = buscarCpf(cpf);
+        String rgValidationMessage = buscarRg(rg);
 
-        if (clientesDto == null){
-            return "DTO de cliente é null";
-        }
-
-        if (containsWhitespace(clientesDto.getEmail())) {
-            return "O Email não pode conter espaços";
-        }
-
-        if (!isValidCpf(clientesDto.getCpf())) {
-            return "CPF inválido";
-        }
-
-        if (!isValidRg(clientesDto.getRg())) {
-            return "RG inválido";
-        }
-
-        if (!isValidName(clientesDto.getNome())) {
-            return "Nome inválido";
-        }
-
-        if (!isValidStatus(clientesDto.getStatus().toString())) {
-            return "Status inválido";
-        }
-
-        if (!isValidCep(clientesDto.getCep())){
-            return "CEP inválido";
-        }
-
-        if (!isValidPais(clientesDto.getPais())){
-            return "País inválido";
-        }
-
-        if (!isValidPlano(valueOf(clientesDto.getPlano()))){
-            return "Plano inválido";
+        if (cpfValidationMessage != null || rgValidationMessage != null){
+            return cpfValidationMessage != null ? cpfValidationMessage : rgValidationMessage;
         }
         return null;
     }
+    private String buscarCpf(String cpf){
+        MainFieldExisting.CpfExisting cpfExisting = new MainFieldExisting.CpfExisting();
 
-    private boolean containsWhitespace(String value) {
-        return value != null && value.contains(" ");
-    }
-    private boolean isValidCpf(String cpf){
-        String cpfRegex = "^\\d{11}$";
-        return cpf != null && cpf.matches(cpfRegex);
-    }
-    private boolean isValidRg(String rg){
-        String rgRegex = "^[0-9]{1,2}.?[0-9]{3}.?[0-9]{3}-?[0-9Xx]$";
-        return rg != null && rg.matches(rgRegex);
-    }
-    private boolean isValidName(String name){
-        String nameRegex = "[A-Z][a-z].* [A-Z][a-z].*";
-        return name != null && name.matches(nameRegex);
-    }
-    private boolean isValidStatus(String status){
-        return status.equals("ATIVO") || status.equals("DESATIVADO") || status.equals("INATIVO");
-    }
+        String cpfUpdate = cpfExisting.appliPattern(cpf);
 
-    private boolean isValidPlano(TipoPlanoEnum planoEnum){
-        String[] planos = {
-                String.valueOf(TipoPlanoEnum.BASICO),
-                String.valueOf(TipoPlanoEnum.PADRAO),
-                String.valueOf(TipoPlanoEnum.EXECUTIVO),
-                String.valueOf(TipoPlanoEnum.NEGOCIOS),
-                String.valueOf(TipoPlanoEnum.LUXO),
-                String.valueOf(TipoPlanoEnum.ROMANCE),
-                String.valueOf(TipoPlanoEnum.FAMILIA),
-                String.valueOf(TipoPlanoEnum.LONGA_ESTADIA),
-                String.valueOf(TipoPlanoEnum.VIP),
-                String.valueOf(TipoPlanoEnum.COBERTURA),
-        };
-
-        for (int i = 0; i < planos.length; i++) {
-            if (planos[i].equals(String.valueOf(planoEnum))){
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean isValidCep(String cep){
-        String cepfRegex = "^(?=.*\\d)\\d{1,}$";
-        return cep != null && cep.matches(cepfRegex);
-    }
-
-    private boolean isValidPais(String pais){
-        String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
-        return pais != null && pais.matches(paisRegex);
-    }
-    private String verificarCampoExistente(ClientesDto clientesDto){
-        //if (emailExist(clientesDto.getEmail())){
-        //    return "Email já está em uso";
-        //}
-
-        if (cpfExist(clientesDto.getCpf())){
+        if (clientesRepository.existsByCpf(cpfUpdate)){
             return "CPF já está em uso";
         }
+        return null;
+    }
+    private String buscarRg(String rg){
+        MainFieldExisting.RgExisting rgExisting = new MainFieldExisting.RgExisting();
 
-        if (rgExist(clientesDto.getRg())){
-            return "Rg já está em uso";
+        String rgUpdate = rgExisting.appliPattern(rg);
+
+        if (clientesRepository.existsByRg(rgUpdate)){
+            return "O Rg já está em uso";
         }
         return null;
     }
-
-    //private boolean emailExist(String email){
-    //    return clientesRepository.existsByEmail(email);
-    //}
-    private boolean cpfExist(String cpf){
-        return clientesRepository.existsByCpf(cpf);
-    }
-    private boolean rgExist(String rg){
-        return clientesRepository.existsByRg(rg);
-    }
-
     private Long generatedIdUnique(){
         long id = 0;
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -180,10 +94,9 @@ public class AddClienteService {
         } while (clientesRepository.existsById(id));
         return id;
     }
-
-
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
+
         clientes.setId(generatedIdUnique());
         clientes.setNome(clientesDto.getNome());
         clientes.setEmail(clientesDto.getEmail());
@@ -199,6 +112,7 @@ public class AddClienteService {
         clientes.setData_nascimento(clientesDto.getData_nascimento());
         clientes.setRole(RolesEnum.ROLE_CLIENTE_BASICO);
 
+
         if (clientesDto.getPlano() == null){
             PlanoEntity plano = new PlanoEntity();
             plano.setId(clientes.getId());
@@ -208,58 +122,68 @@ public class AddClienteService {
 
         if (clientesDto.getPlano() != null) {
             PlanoEntity plano = new PlanoEntity();
-
             plano.setId(clientes.getId());
-
-            plano.setPlano(valueOf(String.valueOf(clientesDto.getPlano())));
-
+            TipoPlanoEnum planoEnum = valueOf(clientesDto.getPlano());
+            plano.setPlano(planoEnum);
             clientes.setPlano(plano);
 
-            if (plano.getPlano() == TipoPlanoEnum.SEM_PLANO){
-                plano.setValor(0.0);
-            }
+            MainAplicationValues.FlatValue aplicarValor = new MainAplicationValues.FlatValue();
+            double valorPlano = aplicarValor.applyValues(planoEnum, 0.0);
 
-            if (plano.getPlano() == TipoPlanoEnum.PADRAO){
-                plano.setValor(100.0);
-            }
+            plano.setValor(valorPlano);
 
-            if (plano.getPlano() == TipoPlanoEnum.BASICO){
-                plano.setValor(50.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.FAMILIA){
-                plano.setValor(150.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.LUXO){
-                plano.setValor(1500.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.COBERTURA){
-                plano.setValor(1000.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.EXECUTIVO){
-                plano.setValor(2600.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.NEGOCIOS){
-                plano.setValor(5000.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.LONGA_ESTADIA){
-                plano.setValor(3000.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.VIP){
-                plano.setValor(4000.0);
-            }
-
-            if (plano.getPlano() == TipoPlanoEnum.ROMANCE){
-                plano.setValor(3500.0);
-            }
             planoRepository.save(plano);
         }
         return clientes;
+    }
+
+
+    private ResponseEntity<String> realizedValidationsRegex(ClientesDto clientesDto){
+        String nomeValidationMessage = validarNome(clientesDto.getNome());
+        String cpfValidationMessage = validarCpf(clientesDto.getCpf());
+        String cepValidationMessage = validarCep(clientesDto.getCep());
+        String paisValidationMessage = paisRegex(clientesDto.getPais());
+        String rgValidationMessage = rgRegex(clientesDto.getRg());
+
+        if (nomeValidationMessage != null){
+            return ResponseEntity.badRequest().body("Erro no nome: " + nomeValidationMessage);
+        }
+
+        if (cpfValidationMessage != null){
+            return ResponseEntity.badRequest().body("Erro no cpf: " + cpfValidationMessage);
+        }
+
+        if (cepValidationMessage != null){
+            return ResponseEntity.badRequest().body("Erro no cep: " + cepValidationMessage);
+        }
+
+        if (paisValidationMessage != null){
+            return ResponseEntity.badRequest().body("Erro no país: " + paisValidationMessage);
+        }
+
+        if (rgValidationMessage != null){
+            return ResponseEntity.badRequest().body("Erro no rg: " + paisValidationMessage);
+        }
+        return null;
+    }
+    private String validarNome(String nome){
+        MainRegexApplication.NameRegex nameRegex = new MainRegexApplication.NameRegex();
+        return nameRegex.applyRegex(nome);
+    }
+    private String validarCpf(String cpf){
+        MainRegexApplication.CpfRegex cpfRegex = new MainRegexApplication.CpfRegex();
+        return cpfRegex.applyRegex(cpf);
+    }
+    private String validarCep(String cep){
+        MainRegexApplication.CepRegex rgRegex = new MainRegexApplication.CepRegex();
+        return rgRegex.applyRegex(cep);
+    }
+    private String paisRegex(String pais){
+        MainRegexApplication.PaisRegex paisRegex = new MainRegexApplication.PaisRegex();
+        return paisRegex.applyRegex(pais);
+    }
+    private String rgRegex(String rg){
+        MainRegexApplication.RgRegex rgRegex = new MainRegexApplication.RgRegex();
+        return rgRegex.applyRegex(rg);
     }
 }

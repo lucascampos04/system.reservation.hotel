@@ -8,13 +8,12 @@ public enum TipoPlanoEnum {
     BASICO("Plano Básico"),
     PADRAO("Plano Padrão"),
     EXECUTIVO("Plano Executivo"),
-    NEGOCIOS("Plano de Negócios"),
     LUXO("Plano de Luxo"),
-    ROMANCE("Pacote de Romance"),
     FAMILIA("Pacote Família"),
     LONGA_ESTADIA("Plano de Longa Estadia"),
-    VIP("Pacote VIP"),
-    COBERTURA("Plano de Cobertura");
+    COBERTURA("Plano de Cobertura"),
+    NEGOCIO("Plano de negocio"),
+    VIP("Pacote VIP");
 
     private final String descricao;
 

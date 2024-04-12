@@ -163,17 +163,11 @@ public class PutCliente {
                 plano.setValor(1500.0);
             }
 
-            if (plano.getPlano() == TipoPlanoEnum.COBERTURA) {
-                plano.setValor(1000.0);
-            }
 
             if (plano.getPlano() == TipoPlanoEnum.EXECUTIVO) {
                 plano.setValor(2600.0);
             }
 
-            if (plano.getPlano() == TipoPlanoEnum.NEGOCIOS) {
-                plano.setValor(5000.0);
-            }
 
             if (plano.getPlano() == TipoPlanoEnum.LONGA_ESTADIA) {
                 plano.setValor(3000.0);
