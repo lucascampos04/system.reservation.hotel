@@ -10,6 +10,7 @@ import org.example.hotel_reservation_system.repository.Clientes.ClientesReposito
 import org.example.hotel_reservation_system.repository.Plano.PlanoRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Client.NotificationClientInsert;
 import org.example.hotel_reservation_system.services.patterns.FieldsExisting.MainFieldExisting;
+import org.example.hotel_reservation_system.services.patterns.GeneratoId.IdGeneratoImpl;
 import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAplicationValues;
 import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,13 @@ public class AddClienteService {
     private final ClientesRepository clientesRepository;
     private final NotificationClientInsert notificationClientInsert;
     private final PlanoRepository planoRepository;
+    private final IdGeneratoImpl idGenerato;
 
-    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert, PlanoRepository planoRepository) {
+    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert, PlanoRepository planoRepository, IdGeneratoImpl idGenerato) {
         this.clientesRepository = clientesRepository;
         this.notificationClientInsert = notificationClientInsert;
         this.planoRepository = planoRepository;
+        this.idGenerato = idGenerato;
     }
 
     @SuppressWarnings("null")
@@ -86,18 +89,10 @@ public class AddClienteService {
         }
         return null;
     }
-    private Long generatedIdUnique(){
-        long id = 0;
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        do {
-            id = 100000 + random.nextInt(900000);
-        } while (clientesRepository.existsById(id));
-        return id;
-    }
     private ClientesEntity getDads(ClientesDto clientesDto){
         ClientesEntity clientes = new ClientesEntity();
 
-        clientes.setId(generatedIdUnique());
+        clientes.setId(idGenerato.generateId("cliente"));
         clientes.setNome(clientesDto.getNome());
         clientes.setEmail(clientesDto.getEmail());
         clientes.setCpf(clientesDto.getCpf());
