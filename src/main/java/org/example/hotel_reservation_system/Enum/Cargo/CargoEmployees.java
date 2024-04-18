@@ -8,6 +8,5 @@ public enum CargoEmployees {
     COZINHEIRO,
     SEGURANCA,
     MANOBRISTA,
-    LIMPEZA,
-    OUTROS
+    LIMPEZA
 }

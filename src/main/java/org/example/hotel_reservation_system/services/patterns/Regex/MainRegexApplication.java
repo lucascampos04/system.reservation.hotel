@@ -37,13 +37,14 @@ public class MainRegexApplication {
     public static class PaisRegex implements IRegexStrategy {
         @Override
         public String applyRegex(String pais) {
-            String paisRegex = "^(?=.*[a-zA-Z])[a-zA-Z]{1,}$";
+            String paisRegex = "^[a-zA-ZÀ-ÖØ-öø-ÿ ]+$";
             if (pais == null || !pais.matches(paisRegex)) {
                 return "País inválido";
             }
             return null;
         }
     }
+
 
     public static class RgRegex implements IRegexStrategy{
 

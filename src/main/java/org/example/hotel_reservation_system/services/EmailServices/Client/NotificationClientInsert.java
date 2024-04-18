@@ -20,7 +20,7 @@ public class NotificationClientInsert {
         try{
             MimeMessage mail = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mail);
-            messageHelper.setSubject("Cliente Criado");
+            messageHelper.setSubject("Conta criada com sucesso");
             messageHelper.setText(getMessageMail(nome, plano), true);
             messageHelper.setFrom(supportMail);
             messageHelper.setTo(email);
