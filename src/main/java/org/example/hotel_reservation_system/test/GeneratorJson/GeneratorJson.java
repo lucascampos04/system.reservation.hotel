@@ -1,114 +1,369 @@
 package org.example.hotel_reservation_system.test.GeneratorJson;
 
+import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
+import org.example.hotel_reservation_system.Enum.Contratos.ContratosEmployees;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.Random;
+import java.util.Scanner;
+
+interface GeneratorStrategy {
+    String generate();
+    double generateDadsFuncionario();
+}
 
 public class GeneratorJson {
-    static String email = "camposdlucasoli@gmail.com";
-    public static String main() {
-        String json = generateJson();
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int ops;
+
+        do {
+            System.out.println("[1] - Cliente | [2] - Reserva | [3] - Funcionario | [0] - Sair");
+            ops = scanner.nextInt();
+            JsonEstrutura(ops);
+        } while (ops != 0);
+    }
+
+    private static void JsonEstrutura(int tipoJson) {
+        switch (tipoJson) {
+            default:
+                throw new IllegalArgumentException("Tipo de Json Inválido");
+            case 1:
+                JsonPessoa("cliente");
+                break;
+            case 2:
+                // reserva
+                break;
+            case 3:
+                JsonPessoa("funcionario");
+                break;
+            case 0:
+                System.out.println("Saindo...");
+                break;
+        }
+    }
+
+    private static void JsonPessoa(String tipo) {
+        NameGenerator nameGenerator = new NameGenerator();
+        CpfGenerator cpfGenerator = new CpfGenerator();
+        RgGenerator rgGenerator = new RgGenerator();
+        GeneratorAdress generatorAdress = new GeneratorAdress();
+        GeneratorPlanos generatorPlanos = new GeneratorPlanos();
+
+        CargoGenerator cargoGenerator = new CargoGenerator();
+        SalaryGenerator salaryGenerator = new SalaryGenerator();
+        GeneratorContrato generatorContrato = new GeneratorContrato();
+
+        String nome = nameGenerator.generate();
+        String cpf = cpfGenerator.generate();
+        String rg = rgGenerator.generate();
+        String endereco = generatorAdress.endereco();
+        String numero = generatorAdress.number();
+        String cep = generatorAdress.cep();
+        String pais = generatorAdress.pais();
+        String estado = generatorAdress.estado();
+        String contrato = generatorContrato.generate();
+        String plano = generatorPlanos.generate();
+
+        String cargo = cargoGenerator.generate();
+        double salario = salaryGenerator.generateDadsFuncionario();
+
+        Pessoa pessoa = new Pessoa(nome, cpf, rg, endereco, numero, cep, estado, pais, plano);
+        String json;
+
+        json = """
+                {
+                    "nome": "%s",
+                    "email": "camposdlucasoli@gmail.com",
+                    "data_nascimento": "29/06/2004",
+                    "cpf": "%s",
+                    "rg": "%s",
+                    "endereco": "%s",
+                    "numero": "%s",
+                    "cep": "%s",
+                    "estado": "%s",
+                    "pais": "%s",
+                    "plano": "%s",
+                }
+                """.formatted(pessoa.nome, pessoa.cpf, pessoa.rg, pessoa.endereco, pessoa.numero, pessoa.cep, pessoa.estado, pessoa.pais, pessoa.plano);
+
+        if (tipo.equals("funcionario")) {
+            Funcionario funcionario = new Funcionario(nome, cpf, rg, cargo, salario, endereco, numero, cep, estado, pais, contrato, plano);
+            json = """
+            {
+                "nome": "%s",
+                "email": "camposdlucasoli@gmail.com",
+                "data_nascimento": "29/06/2004",
+                "cpf": "%s",
+                "rg": "%s",
+                "cargo": "%s", 
+                "salario": "%.2f", 
+                "endereco": "%s",
+                "numero": "%s",
+                "cep": "%s",
+                "estado": "%s",
+                "pais": "%s",
+                "contrato": "%s",
+                "plano": "%s"
+            }
+            """.formatted(funcionario.nome, funcionario.cpf,
+                          funcionario.rg, funcionario.cargo,
+                          funcionario.salario, funcionario.endereco,
+                          funcionario.numero, funcionario.cep,
+                          funcionario.estado, funcionario.pais,
+                          funcionario.contrato, funcionario.plano
+            );
+        }
+
         System.out.println(json);
-        return json;
+    }
+}
+
+class Pessoa {
+    protected String nome;
+    protected String cpf;
+    protected String rg;
+    protected String endereco;
+    protected String numero;
+    protected String cep;
+    protected String estado;
+    protected String pais;
+    protected String plano;
+
+    public Pessoa(String nome, String cpf, String rg, String endereco, String numero, String cep, String estado, String pais, String plano) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.endereco = endereco;
+        this.numero = numero;
+        this.cep = cep;
+        this.estado = estado;
+        this.pais = pais;
+        this.plano = plano;
+    }
+}
+
+class Funcionario extends Pessoa {
+    protected String cargo;
+    protected double salario;
+    protected String contrato;
+
+    public Funcionario(String nome, String cpf, String rg, String cargo, double salario, String endereco, String numero, String cep, String estado, String pais,String plano, String contrato) {
+        super(nome, cpf, rg, endereco, numero, cep, estado, pais, plano);
+        this.cargo = cargo;
+        this.salario = salario;
+        this.contrato = contrato;
+    }
+}
+
+class GeneratorPlanos implements GeneratorStrategy{
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        TipoPlanoEnum planoEnum = TipoPlanoEnum.values()[random.nextInt(TipoPlanoEnum.values().length)];
+        return planoEnum.toString();
     }
 
-    private static String generateJson() {
-        return "{\n" +
-                "  \"nome\": \"" + generateName() + "\",\n" +
-                "  \"email\": \"" + email + "\",\n" +
-                "  \"cpf\": \"" + generateCpf() + "\",\n" +
-                "  \"rg\": \"" + generateRg() + "\",\n" +
-                "  \"endereco\": \"" + generateAddress() + "\",\n" +
-                "  \"cep\": \"" + generateCep() + "\",\n" +
-                "  \"numero\": " + generateNumber() + ",\n" +
-                "  \"estado\": \"" + generateState() + "\",\n" +
-                "  \"pais\": \"" + generateCountry() + "\",\n" +
-                "  \"data_nascimento\": \"29/06/2004\",\n" +
-                "  \"plano\": \"" + generatePlans() + "\",\n" +
-                "}";
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
+
+class GeneratorContrato implements GeneratorStrategy {
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        ContratosEmployees contratosEmployees = ContratosEmployees.values()[random.nextInt(ContratosEmployees.values().length)];
+        return contratosEmployees.toString();
     }
 
-    private static String generateName() {
-        String[] prefixes = {"John", "David", "Michael", "Sarah", "Emily", "Emma", "James", "William"};
-        String[] suffixes = {"Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson"};
 
-        Random random = new Random();
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
 
-        String prefix = prefixes[random.nextInt(prefixes.length)];
-        String suffix = suffixes[random.nextInt(suffixes.length)];
+class GeneratorAdress implements GeneratorStrategy {
+    private final String[] alfabeto = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    private final String[] streets = {"Rua A", "Avenida B", "Praça C", "Travessa D", "Alameda E"};
+    private final String[] cities = {"City", "City", "City", "City", "City"};
+    private final String[] states = {"State", "State", "State", "State", "State"};
+    private final String[] countries = {"Brasil", "Estados Unidos", "Russia", "Canada", "Espanha"};
 
-        return prefix + " " + suffix;
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        return "";
     }
 
-    private static String generateCpf() {
-        Random random = new Random();
-        StringBuilder cpf = new StringBuilder();
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
 
-        for (int i = 1; i <= 11; i++) {
-            cpf.append(random.nextInt(10));
+    public String number(){
+        int numLetras = random.nextInt(3);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < numLetras; i++) {
+            sb.append(alfabeto[random.nextInt(alfabeto.length)]);
         }
 
-        return cpf.toString();
-    }
-    private static String generateRg() {
-        Random random = new Random();
-        StringBuilder rg = new StringBuilder();
-
-        for (int i = 0; i < 9; i++) {
-            rg.append(random.nextInt(10));
+        int numDigitos = 3 - numLetras;
+        for (int i = 0; i < numDigitos; i++) {
+            sb.append(random.nextInt(10));
         }
 
-        return rg.toString();
+        return sb.toString();
     }
 
-    private static String generateAddress() {
-        String[] streets = {"Rua A", "Avenida B", "Praça C", "Travessa D", "Alameda E"};
-        String[] cities = {"City", "City", "City", "City", "City"};
-        Random random = new Random();
-        return streets[random.nextInt(streets.length)] + ", " + random.nextInt(100) + ", " + cities[random.nextInt(cities.length)];
+    public String endereco(){
+        return streets[random.nextInt(streets.length)] + ", " + cities[random.nextInt(cities.length)];
     }
 
-    private static String generateCep() {
-        Random random = new Random();
+    public String cep(){
         StringBuilder cep = new StringBuilder();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++){
             cep.append(random.nextInt(10));
         }
 
         return cep.toString();
     }
 
-    private static int generateNumber() {
-        Random random = new Random();
-        return random.nextInt(1000) + 1;
-    }
-
-    private static String generateState() {
-        String[] states = {"State", "State", "State", "State", "State"};
-        Random random = new Random();
+    public String estado(){
         return states[random.nextInt(states.length)];
     }
 
-    private static String generatePlans(){
-        TipoPlanoEnum[] plansEnums = TipoPlanoEnum.values();
-        String[] plans = new String[plansEnums.length];
-
-        for (int i = 0; i < plansEnums.length; i++) {
-            plans[i] = plansEnums[i].toString();
-        }
-
-        Random random = new Random();
-        return plans[random.nextInt(plans.length)];
-    }
-
-    private static String generateCountry() {
-        String[] countries = {"Country", "Country", "Country", "Country", "Country"};
-        Random random = new Random();
+    public String pais(){
         return countries[random.nextInt(countries.length)];
     }
+}
 
+class NameGenerator implements GeneratorStrategy {
+    private final String[] prefixes = {"John", "David", "Michael", "Sarah", "Emily", "Emma", "James", "William"};
+    private final String[] suffixes = {"Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson"};
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        String prefix1 = prefixes[random.nextInt(prefixes.length)];
+        String prefix2;
+
+        do {
+            prefix2 = prefixes[random.nextInt(prefixes.length)];
+        } while (prefix2.equals(prefix1));
+
+        String suffix = suffixes[random.nextInt(suffixes.length)];
+
+        return prefix1 + " " + prefix2 + " " + suffix;
+    }
+
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
+
+class RgGenerator implements GeneratorStrategy {
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        StringBuilder rg = new StringBuilder();
+        for (int i = 0; i <= 9; i++) {
+            rg.append(random.nextInt(10));
+        }
+
+        return rg.toString();
+    }
+
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
+
+class CpfGenerator implements GeneratorStrategy {
+    private final Random random = new Random();
+
+    @Override
+    public String generate() {
+        StringBuilder cpf = new StringBuilder();
+        for (int i = 0; i < 11; i++) {
+            cpf.append(random.nextInt(10));
+        }
+        return cpf.toString();
+    }
+
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
+
+class CargoGenerator implements GeneratorStrategy {
+    private final Random random = new Random();
+    private final CargoEmployees cargoEmployees = CargoEmployees.values()[random.nextInt(CargoEmployees.values().length)];
+
+    @Override
+    public String generate() {
+        return cargoEmployees.toString();
+    }
+
+    @Override
+    public double generateDadsFuncionario() {
+        return 0;
+    }
+}
+
+class SalaryGenerator implements GeneratorStrategy {
+    private final Random random = new Random();
+    private final CargoGenerator cargoGenerator = new CargoGenerator();
+    private double min;
+    private double max;
+
+    @Override
+    public String generate() {
+        return "";
+    }
+
+    @Override
+    public double generateDadsFuncionario() {
+        double salary = 0;
+        String cargo = cargoGenerator.generate();
+
+        switch (cargo){
+            case "GERENTE":
+                min = 3000;
+                max = 10000;
+                salary = min + random.nextDouble() * (max - min);
+                break;
+            case "RECEPCIONISTA":
+            case "CAMAREIRA":
+            case "GARCOM":
+            case "MANOBRISTA":
+            case "LIMPEZA":
+                min = 2000;
+                max = 5000;
+                salary = min + random.nextDouble() * (max - min);
+                break;
+            case "SEGURANCA":
+            case "COZINHEIRO":
+                min = 2500;
+                max = 7000;
+                salary = min + random.nextDouble() * (max - min);
+                break;
+            default:
+                throw new IllegalArgumentException("Cargo inválido");
+        }
+        return salary;
+    }
 }
