@@ -1,4 +1,4 @@
-package org.example.hotel_reservation_system.services.DiscountsReservas;
+package org.example.hotel_reservation_system.services.patterns.DiscountsReservas;
 
 import org.springframework.stereotype.Service;
 

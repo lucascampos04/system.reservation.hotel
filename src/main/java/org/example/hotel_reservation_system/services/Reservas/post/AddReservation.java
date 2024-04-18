@@ -6,10 +6,9 @@ import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
-import org.example.hotel_reservation_system.repository.Employees.EmployeesRepository;
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
 import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
-import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
+import org.example.hotel_reservation_system.services.patterns.DiscountsReservas.DiscountsReservaServices;
 import org.example.hotel_reservation_system.services.EmailServices.PaymentsSuccess.NotificationPaymentSuccessServices;
 import org.example.hotel_reservation_system.services.EmailServices.Reservas.NotificationReservaCongratulations;
 import org.springframework.http.ResponseEntity;
@@ -47,18 +46,6 @@ public class AddReservation {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao adicionar reserva");
         }
-    }
-
-    private String validarCamposPatterns(ReservasDto reservasDto) {
-        if (!isValidPackageName(reservasDto.getPackageName())){
-            return "Pacote inválido";
-        }
-
-        if (!containsWhitespace(String.valueOf(reservasDto.getId()))){
-            return "Id invalido";
-        }
-
-        return null;
     }
 
     private ReservasEntity getDads(ReservasDto reservasDto) {

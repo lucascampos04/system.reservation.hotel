@@ -1,4 +1,4 @@
-package org.example.hotel_reservation_system.services.DiscountsReservas;
+package org.example.hotel_reservation_system.services.patterns.DiscountsReservas;
 
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 import org.springframework.stereotype.Service;
