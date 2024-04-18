@@ -6,12 +6,12 @@ import org.example.hotel_reservation_system.dto.Reservas.ReservasDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.model.Reservas.ReservasEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
-import org.example.hotel_reservation_system.repository.Employees.EmployeesRepository;
 import org.example.hotel_reservation_system.repository.Reservas.ReservasRepository;
 import org.example.hotel_reservation_system.services.ApplyPricesInPlans.ApplyPriceInPackagesService;
-import org.example.hotel_reservation_system.services.DiscountsReservas.DiscountsReservaServices;
+import org.example.hotel_reservation_system.services.patterns.DiscountsReservas.DiscountsReservaServices;
 import org.example.hotel_reservation_system.services.EmailServices.PaymentsSuccess.NotificationPaymentSuccessServices;
 import org.example.hotel_reservation_system.services.EmailServices.Reservas.NotificationReservaCongratulations;
+import org.example.hotel_reservation_system.services.patterns.GeneratoId.IdGeneratoImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +21,21 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class AddReservation {
+
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
     private final DiscountsReservaServices discountsReservaServices;
     private final NotificationReservaCongratulations notificationReservaCongratulations;
     private final NotificationPaymentSuccessServices notificationPaymentSuccessServices;
-    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, DiscountsReservaServices discountsReservaServices, NotificationReservaCongratulations notificationReservaCongratulations, NotificationPaymentSuccessServices notificationPaymentSuccessServices) {
+    private final IdGeneratoImpl idGenerato;
+
+    public AddReservation(ReservasRepository reservasRepository, ClientesRepository clientesRepository, DiscountsReservaServices discountsReservaServices, NotificationReservaCongratulations notificationReservaCongratulations, NotificationPaymentSuccessServices notificationPaymentSuccessServices, IdGeneratoImpl idGenerato) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
         this.discountsReservaServices = discountsReservaServices;
         this.notificationReservaCongratulations = notificationReservaCongratulations;
         this.notificationPaymentSuccessServices = notificationPaymentSuccessServices;
+        this.idGenerato = idGenerato;
     }
 
     public ResponseEntity<String> addReservation(ReservasDto reservasDto) {
@@ -49,22 +53,10 @@ public class AddReservation {
         }
     }
 
-    private String validarCamposPatterns(ReservasDto reservasDto) {
-        if (!isValidPackageName(reservasDto.getPackageName())){
-            return "Pacote inválido";
-        }
-
-        if (!containsWhitespace(String.valueOf(reservasDto.getId()))){
-            return "Id invalido";
-        }
-
-        return null;
-    }
-
     private ReservasEntity getDads(ReservasDto reservasDto) {
         ReservasEntity reservasEntity = new ReservasEntity();
 
-        reservasEntity.setId(genertatorId());
+        reservasEntity.setId(idGenerato.generateId("reservas"));
         reservasEntity.setPackageName(reservasDto.getPackageName());
         reservasEntity.setData_checkin(LocalDateTime.now());
         reservasEntity.setFormaPagamento(reservasDto.getFormaPagamento());
