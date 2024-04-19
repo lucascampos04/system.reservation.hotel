@@ -4,6 +4,9 @@ import org.example.hotel_reservation_system.Enum.Cargo.CargoEmployees;
 import org.example.hotel_reservation_system.Enum.Contratos.ContratosEmployees;
 import org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -14,7 +17,6 @@ interface GeneratorStrategy {
 
 public class GeneratorJson {
 
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int ops;
@@ -22,11 +24,25 @@ public class GeneratorJson {
         do {
             System.out.println("[1] - Cliente | [2] - Reserva | [3] - Funcionario | [0] - Sair");
             ops = scanner.nextInt();
-            JsonEstrutura(ops);
+            String json = JsonEstrutura(ops);
+
+            if (json != null) {
+                System.out.println("Deseja copiar o json ? - [s/n]");
+                String input = scanner.next();
+
+                switch (input) {
+                    case "s":
+                        copyJson(json);
+                        break;
+                    case "n":
+                        System.out.println("Saindo...");
+                        break;
+                }
+            }
         } while (ops != 0);
     }
 
-    private static void JsonEstrutura(int tipoJson) {
+    private static String JsonEstrutura(int tipoJson) {
         switch (tipoJson) {
             default:
                 throw new IllegalArgumentException("Tipo de Json Inválido");
@@ -43,6 +59,14 @@ public class GeneratorJson {
                 System.out.println("Saindo...");
                 break;
         }
+        return null;
+    }
+
+    private static void copyJson(String json) {
+        StringSelection stringSelection = new StringSelection(json);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+        System.out.println("Json copiado com sucesso!");
     }
 
     private static void JsonPessoa(String tipo) {
