@@ -2,7 +2,6 @@ package org.example.hotel_reservation_system.model.Clientes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
@@ -66,7 +65,7 @@ public class ClientesEntity{
     @JoinColumn(name = "plano_id")
     private PlanoEntity plano;
     @JsonIgnore
-    public StatusEnum getStatus() {
+    public Enum getStatus() {
         return status;
     }
 
