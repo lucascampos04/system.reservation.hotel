@@ -11,6 +11,7 @@ import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -62,6 +63,8 @@ public class ClientesDto implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String plano;
+
+    private Map<String, String> updates;
 
     public ClientesDto() {}
 
@@ -132,5 +135,13 @@ public class ClientesDto implements Serializable {
         this.id = id;
         this.nome = nome;
         this.status = status;
+    }
+
+    public Map<String, String> getUpdates() {
+        return updates;
+    }
+
+    public void addUpdate(String columnName, String newValue) {
+        updates.put(columnName, newValue);
     }
 }

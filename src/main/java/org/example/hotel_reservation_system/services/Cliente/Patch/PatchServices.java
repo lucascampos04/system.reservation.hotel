@@ -4,6 +4,7 @@ import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Client.NotifactionUpdateClient;
+import org.example.hotel_reservation_system.services.patterns.UpdateColumns.Columns.PatchMainPattern;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,52 +47,77 @@ public class PatchServices {
     private List<String> applyPartialUpdate(ClientesEntity cliente, ClientesDto updates) {
         List<String> changeMessages = new ArrayList<>();
 
+        PatchMainPattern.NamePatch namePatch = new PatchMainPattern.NamePatch();
+        PatchMainPattern.EmailPatch emailPatch = new PatchMainPattern.EmailPatch();
+        PatchMainPattern.CpfPatch cpfPatch = new PatchMainPattern.CpfPatch();
+        PatchMainPattern.RgPatch rgPatch = new PatchMainPattern.RgPatch();
+        PatchMainPattern.EnderecoPatch enderecoPatch = new PatchMainPattern.EnderecoPatch();
+        PatchMainPattern.CepPatch cepPatch = new PatchMainPattern.CepPatch();
+        PatchMainPattern.NumeroPatch numeroPatch = new PatchMainPattern.NumeroPatch();
+        PatchMainPattern.EstadoPatch estadoPatch = new PatchMainPattern.EstadoPatch();
+        PatchMainPattern.PaisPatch paisPatch = new PatchMainPattern.PaisPatch();
+        PatchMainPattern.DataNascimentoPatch dataNascimentoPatch = new PatchMainPattern.DataNascimentoPatch();
+        PatchMainPattern.StatusPatch statusPatch = new PatchMainPattern.StatusPatch();
+        PatchMainPattern.RolePatch rolePatch = new PatchMainPattern.RolePatch();
+
         if (updates.getNome() != null) {
-            changeMessages.add("Nome: " + cliente.getNome() + " -> " + updates.getNome());
+            String changeMessage = namePatch.updateColumn(cliente.getNome(), updates.getNome());
+            changeMessages.add(changeMessage);
             cliente.setNome(updates.getNome());
         }
         if (updates.getEmail() != null) {
-            changeMessages.add("Email: " + cliente.getEmail() + " -> " + updates.getEmail());
+            String changeMessage = emailPatch.updateColumn(cliente.getEmail(), updates.getEmail());
+            changeMessages.add(changeMessage);
             cliente.setEmail(updates.getEmail());
         }
         if (updates.getCpf() != null) {
-            changeMessages.add("CPF: " + cliente.getCpf() + " -> " + updates.getCpf());
+            String changeMessage = cpfPatch.updateColumn(cliente.getCpf(), updates.getCpf());
+            changeMessages.add(changeMessage);
             cliente.setCpf(updates.getCpf());
         }
         if (updates.getRg() != null) {
-            changeMessages.add("RG: " + cliente.getRg() + " -> " + updates.getRg());
+            String changeMessage = rgPatch.updateColumn(cliente.getRg(), updates.getRg());
+            changeMessages.add(changeMessage);
             cliente.setRg(updates.getRg());
         }
         if (updates.getEndereco() != null) {
-            changeMessages.add("Endereço: " + cliente.getEndereco() + " -> " + updates.getEndereco());
+            String changeMessage = enderecoPatch.updateColumn(cliente.getEndereco(), updates.getEndereco());
+            changeMessages.add(changeMessage);
             cliente.setEndereco(updates.getEndereco());
         }
         if (updates.getCep() != null) {
-            changeMessages.add("CEP: " + cliente.getCep() + " -> " + updates.getCep());
+            String changeMessage = cepPatch.updateColumn(cliente.getCep(), updates.getCep());
+            changeMessages.add(changeMessage);
             cliente.setCep(updates.getCep());
         }
         if (updates.getNumero() != null) {
-            changeMessages.add("Número: " + cliente.getNumero() + " -> " + updates.getNumero());
+            String changeMessage = numeroPatch.updateColumn(cliente.getNumero(), updates.getNumero());
+            changeMessages.add(changeMessage);
             cliente.setNumero(updates.getNumero());
         }
         if (updates.getEstado() != null) {
-            changeMessages.add("Estado: " + cliente.getEstado() + " -> " + updates.getEstado());
+            String changeMessage = estadoPatch.updateColumn(cliente.getEstado(), updates.getEstado());
+            changeMessages.add(changeMessage);
             cliente.setEstado(updates.getEstado());
         }
         if (updates.getPais() != null) {
-            changeMessages.add("País: " + cliente.getPais() + " -> " + updates.getPais());
+            String changeMessage = paisPatch.updateColumn(cliente.getPais(), updates.getPais());
+            changeMessages.add(changeMessage);
             cliente.setPais(updates.getPais());
         }
         if (updates.getData_nascimento() != null) {
-            changeMessages.add("Data de nascimento: " + cliente.getData_nascimento() + " -> " + updates.getData_nascimento());
+            String changeMessage = dataNascimentoPatch.updateColumn(cliente.getData_nascimento(), updates.getData_nascimento());
+            changeMessages.add(changeMessage);
             cliente.setData_nascimento(updates.getData_nascimento());
         }
         if (updates.getStatus() != null) {
-            changeMessages.add("Status: " + cliente.getStatus() + " -> " + updates.getStatus());
+            String changeMessage = statusPatch.getColumnType(cliente.getStatus(),updates.getStatus());
+            changeMessages.add(changeMessage);
             cliente.setStatus(updates.getStatus());
         }
         if (updates.getRole() != null) {
-            changeMessages.add("Role: " + cliente.getRole() + " -> " + updates.getRole());
+            String changeMessage = rolePatch.getColumnType(cliente.getRole(), updates.getRole());
+            changeMessages.add(changeMessage);
             cliente.setRole(updates.getRole());
         }
 
