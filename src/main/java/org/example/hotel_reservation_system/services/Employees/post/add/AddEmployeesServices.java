@@ -7,6 +7,8 @@ import org.example.hotel_reservation_system.dto.Employees.EmployeesDto;
 import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
 import org.example.hotel_reservation_system.repository.Employees.EmployeesRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Employees.EmployeeSuccessfullyHired;
+import org.example.hotel_reservation_system.services.patterns.GeneratoId.IdGenerator;
+import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,22 @@ public class AddEmployeesServices {
 
     private final EmployeesRepository employeesRepository;
     private final EmployeeSuccessfullyHired employeeSuccessfullyHired;
-    public AddEmployeesServices(EmployeesRepository employeesRepository, EmployeeSuccessfullyHired employeeSuccessfullyHired) {
+    private final IdGenerator idGenerator;
+
+    public AddEmployeesServices(EmployeesRepository employeesRepository, EmployeeSuccessfullyHired employeeSuccessfullyHired, IdGenerator idGenerator) {
         this.employeesRepository = employeesRepository;
         this.employeeSuccessfullyHired = employeeSuccessfullyHired;
+        this.idGenerator = idGenerator;
     }
 
     public ResponseEntity<String> addEmployees(EmployeesDto employeesDto) {
         try{
+            ResponseEntity<String> messageRegex = realizedValidationsRegex(employeesDto);
+
+            if (messageRegex != null){
+                return messageRegex;
+            }
+
             EmployeesEntity employeesEntity = getDads(employeesDto);
             employeesRepository.save(employeesEntity);
 
@@ -42,8 +53,9 @@ public class AddEmployeesServices {
 
     private EmployeesEntity getDads(EmployeesDto employeesDto) {
         EmployeesEntity employeesEntity = new EmployeesEntity();
+        Long id = idGenerator.generateId("funcionarios");
 
-        employeesEntity.setId(genertatorId());
+        employeesEntity.setId(id);
         employeesEntity.setNome(employeesDto.getNome());
         employeesEntity.setEmail(employeesDto.getEmail());
         employeesEntity.setCpf(employeesDto.getCpf());
@@ -62,12 +74,63 @@ public class AddEmployeesServices {
         return employeesEntity;
     }
 
-    private Long genertatorId() {
-        long id = 0;
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        do {
-            id = 100000000 + random.nextLong(999999999);
-        } while (employeesRepository.existsById(id));
-        return id;
+    private ResponseEntity<String> realizedValidationsRegex (EmployeesDto employeesDto){
+        String nameMessage;
+        String cpfMessage;
+        String rgMessage;
+        String cepMessage;
+        String paisMessage;
+
+        nameMessage = validarNome(employeesDto.getNome());
+        cpfMessage = validarCPF(employeesDto.getCpf());
+        rgMessage = validarRG(employeesDto.getRg());
+        paisMessage = validarPais(employeesDto.getPais());
+        cepMessage = validarCep(employeesDto.getCep());
+
+        if (nameMessage != null && !nameMessage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erro no nome: " + nameMessage);
+        }
+
+        if (cpfMessage != null && !cpfMessage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erro no cpf: " + cpfMessage);
+        }
+
+        if (rgMessage != null && !rgMessage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erro no rg: " + rgMessage);
+        }
+
+        if (paisMessage != null && !paisMessage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erro no pais: " + paisMessage);
+        }
+
+        if (cepMessage != null && !cepMessage.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erro no cep: " + cepMessage);
+        }
+        return null;
+    }
+
+    private String validarNome(String nome){
+        MainRegexApplication.NameRegex nameRegex = new MainRegexApplication.NameRegex();
+        return nameRegex.applyRegex(nome);
+    }
+
+    private String validarCPF(String cpf){
+        MainRegexApplication.CpfRegex cpfRegex = new MainRegexApplication.CpfRegex();
+        return cpfRegex.applyRegex(cpf);
+    }
+
+    private String validarRG(String rg){
+        MainRegexApplication.RgRegex rgRegex = new MainRegexApplication.RgRegex();
+        return rgRegex.applyRegex(rg);
+    }
+
+    private String validarPais(String pais){
+        MainRegexApplication.PaisRegex paisRegex = new MainRegexApplication.PaisRegex();
+        return paisRegex.applyRegex(pais);
+    }
+
+    private String validarCep(String cep){
+        MainRegexApplication.CepRegex cepRegex = new MainRegexApplication.CepRegex();
+        return cepRegex.applyRegex(cep);
     }
 }
