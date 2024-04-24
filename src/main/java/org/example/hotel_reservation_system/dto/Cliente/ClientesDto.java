@@ -80,7 +80,7 @@ public class ClientesDto implements Serializable {
             return new ClientesDto(
                     entity.getId(),
                     entity.getNome(),
-                    entity.getStatus()
+                    (StatusEnum) entity.getStatus()
             );
         } else {
             return new ClientesDto(
@@ -95,7 +95,7 @@ public class ClientesDto implements Serializable {
                     entity.getNumero(),
                     entity.getEstado(),
                     entity.getPais(),
-                    entity.getStatus(),
+                    (StatusEnum) entity.getStatus(),
                     entity.getData_registro(),
                     entity.getRole(),
                     planoValor,
