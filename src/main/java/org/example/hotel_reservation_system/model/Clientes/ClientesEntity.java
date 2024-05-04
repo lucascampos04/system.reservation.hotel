@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
+import org.example.hotel_reservation_system.model.DadosLogin.DadosLogin;
 import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -64,6 +65,11 @@ public class ClientesEntity{
     @OneToOne
     @JoinColumn(name = "plano_id")
     private PlanoEntity plano;
+
+    @OneToOne
+    @JoinColumn(name = "dados_login")
+    private DadosLogin dadosLogin;
+
     @JsonIgnore
     public Enum getStatus() {
         return status;
@@ -77,7 +83,7 @@ public class ClientesEntity{
                           String cep, String numero,
                           String estado, String pais, String data_nascimento,
                           StatusEnum status, LocalDateTime data_registro,
-                          RolesEnum role, PlanoEntity plano) {
+                          RolesEnum role, PlanoEntity plano, DadosLogin dadosLogin) {
         Id = id;
         this.nome = nome;
         this.email = email;
@@ -93,5 +99,6 @@ public class ClientesEntity{
         this.data_registro = data_registro;
         this.role = role;
         this.plano = plano;
+        this.dadosLogin = dadosLogin;
     }
 }

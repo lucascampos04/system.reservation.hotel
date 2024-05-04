@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.DadosLogin.DadosLogin;
 import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 
 import java.io.Serializable;
@@ -64,6 +65,15 @@ public class ClientesDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String plano;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String login;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String password;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String typeAcess;
+
     private Map<String, String> updates;
 
     public ClientesDto() {}
@@ -76,6 +86,12 @@ public class ClientesDto implements Serializable {
         PlanoEntity plano = entity.getPlano();
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
+
+        DadosLogin dadosLogin = entity.getDadosLogin();
+        String login = dadosLogin.getLogin();
+        String password = dadosLogin.getPassword();
+        String typeAcess = dadosLogin.getTypeAcess();
+
         if (entity.getStatus().equals(StatusEnum.INATIVO) || entity.getStatus().equals(StatusEnum.DESATIVADO)){
             return new ClientesDto(
                     entity.getId(),
@@ -100,7 +116,10 @@ public class ClientesDto implements Serializable {
                     entity.getRole(),
                     planoValor,
                     (entity.getStatus() == StatusEnum.ATIVO) ? planoValor : null,
-                    planoNome
+                    planoNome,
+                    login,
+                    password,
+                    typeAcess
             );
         }
     }
@@ -108,7 +127,7 @@ public class ClientesDto implements Serializable {
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
                        String data_nascimento, String numero, String estado, String pais, StatusEnum status,
                        LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo,
-                       String plano) {
+                       String plano, String login, String password, String typeAcess) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -125,6 +144,9 @@ public class ClientesDto implements Serializable {
         this.role = role;
         this.planoValor = planoValor;
         this.plano = plano;
+        this.login = login;
+        this.password = password;
+        this.typeAcess = typeAcess;
 
         if (status == StatusEnum.ATIVO) {
             this.planoValor = planoValorAtivo;
