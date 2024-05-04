@@ -15,6 +15,7 @@ import org.example.hotel_reservation_system.services.patterns.FieldsExisting.Mai
 import org.example.hotel_reservation_system.services.patterns.GeneratoId.IdGeneratoImpl;
 import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAplicationValues;
 import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
+import org.example.hotel_reservation_system.services.patterns.RegisterAccount.EncriptandoPassword;
 import org.example.hotel_reservation_system.services.patterns.RegisterAccount.TypeAcessOfCreateAccount;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,17 +33,19 @@ public class AddClienteService {
     private final IdGeneratoImpl idGenerato;
     private final DadosLoginRepository dadosLoginRepository;
     private final TypeAcessOfCreateAccount typeAcessOfCreateAccount;
+    private final EncriptandoPassword encriptandoPassword;
 
     public AddClienteService(ClientesRepository clientesRepository,
                              NotificationClientInsert notificationClientInsert,
                              PlanoRepository planoRepository,
-                             IdGeneratoImpl idGenerato, DadosLoginRepository dadosLoginRepository, TypeAcessOfCreateAccount typeAcessOfCreateAccount) {
+                             IdGeneratoImpl idGenerato, DadosLoginRepository dadosLoginRepository, TypeAcessOfCreateAccount typeAcessOfCreateAccount, EncriptandoPassword encriptandoPassword) {
         this.clientesRepository = clientesRepository;
         this.notificationClientInsert = notificationClientInsert;
         this.planoRepository = planoRepository;
         this.idGenerato = idGenerato;
         this.dadosLoginRepository = dadosLoginRepository;
         this.typeAcessOfCreateAccount = typeAcessOfCreateAccount;
+        this.encriptandoPassword = encriptandoPassword;
     }
 
     @SuppressWarnings("null")
@@ -143,11 +146,13 @@ public class AddClienteService {
         dadosLogin.setIdCliente(clientes.getId());
         dadosLogin.setId(idGenerato.generateId("cliente"));
         dadosLogin.setLogin(clientesDto.getLogin());
-        dadosLogin.setPassword(clientesDto.getPassword());
 
         String convertedId = clientes.getId().toString();
         dadosLogin.setTypeAcess(typeAcessOfCreateAccount.getType(convertedId));
 
+        String password = clientesDto.getPassword();
+
+        dadosLogin.setPassword(encriptandoPassword.encriptarPassword(password));
         dadosLoginRepository.save(dadosLogin);
         System.out.println("Aplicando login");
 
