@@ -5,19 +5,21 @@ import org.example.hotel_reservation_system.Enum.Status.StatusEnum;
 import org.example.hotel_reservation_system.Enum.roles.RolesEnum;
 import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.DadosLogin.DadosLogin;
 import org.example.hotel_reservation_system.model.Plano.PlanoEntity;
 import org.example.hotel_reservation_system.repository.Clientes.ClientesRepository;
+import org.example.hotel_reservation_system.repository.DadosLogin.DadosLoginRepository;
 import org.example.hotel_reservation_system.repository.Plano.PlanoRepository;
 import org.example.hotel_reservation_system.services.EmailServices.Client.NotificationClientInsert;
 import org.example.hotel_reservation_system.services.patterns.FieldsExisting.MainFieldExisting;
 import org.example.hotel_reservation_system.services.patterns.GeneratoId.IdGeneratoImpl;
 import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAplicationValues;
 import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
+import org.example.hotel_reservation_system.services.patterns.RegisterAccount.TypeAcessOfCreateAccount;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.example.hotel_reservation_system.Enum.Planos.TipoPlanoEnum.valueOf;
 
@@ -28,12 +30,19 @@ public class AddClienteService {
     private final NotificationClientInsert notificationClientInsert;
     private final PlanoRepository planoRepository;
     private final IdGeneratoImpl idGenerato;
+    private final DadosLoginRepository dadosLoginRepository;
+    private final TypeAcessOfCreateAccount typeAcessOfCreateAccount;
 
-    public AddClienteService(ClientesRepository clientesRepository, NotificationClientInsert notificationClientInsert, PlanoRepository planoRepository, IdGeneratoImpl idGenerato) {
+    public AddClienteService(ClientesRepository clientesRepository,
+                             NotificationClientInsert notificationClientInsert,
+                             PlanoRepository planoRepository,
+                             IdGeneratoImpl idGenerato, DadosLoginRepository dadosLoginRepository, TypeAcessOfCreateAccount typeAcessOfCreateAccount) {
         this.clientesRepository = clientesRepository;
         this.notificationClientInsert = notificationClientInsert;
         this.planoRepository = planoRepository;
         this.idGenerato = idGenerato;
+        this.dadosLoginRepository = dadosLoginRepository;
+        this.typeAcessOfCreateAccount = typeAcessOfCreateAccount;
     }
 
     @SuppressWarnings("null")
@@ -129,9 +138,21 @@ public class AddClienteService {
 
             planoRepository.save(plano);
         }
+
+        DadosLogin dadosLogin = new DadosLogin();
+        dadosLogin.setIdCliente(clientes.getId());
+        dadosLogin.setId(idGenerato.generateId("cliente"));
+        dadosLogin.setLogin(clientesDto.getLogin());
+        dadosLogin.setPassword(clientesDto.getPassword());
+
+        String convertedId = clientes.getId().toString();
+        dadosLogin.setTypeAcess(typeAcessOfCreateAccount.getType(convertedId));
+
+        dadosLoginRepository.save(dadosLogin);
+        System.out.println("Aplicando login");
+
         return clientes;
     }
-
 
     private ResponseEntity<String> realizedValidationsRegex(ClientesDto clientesDto){
         String nomeValidationMessage = validarNome(clientesDto.getNome());
