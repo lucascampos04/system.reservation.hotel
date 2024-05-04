@@ -17,4 +17,5 @@ public class DadosLoginDto implements Serializable {
     String password;
     String TypeAcess;
     Long idCliente;
+    String typeLogin;
 }

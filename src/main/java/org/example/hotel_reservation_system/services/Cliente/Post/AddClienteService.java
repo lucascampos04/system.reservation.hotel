@@ -17,6 +17,7 @@ import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAp
 import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
 import org.example.hotel_reservation_system.services.patterns.RegisterAccount.EncriptandoPassword;
 import org.example.hotel_reservation_system.services.patterns.RegisterAccount.TypeAcessOfCreateAccount;
+import org.example.hotel_reservation_system.services.patterns.RegisterAccount.VerifyLogin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,16 @@ public class AddClienteService {
     private final DadosLoginRepository dadosLoginRepository;
     private final TypeAcessOfCreateAccount typeAcessOfCreateAccount;
     private final EncriptandoPassword encriptandoPassword;
+    private final VerifyLogin verifyLogin;
 
     public AddClienteService(ClientesRepository clientesRepository,
                              NotificationClientInsert notificationClientInsert,
                              PlanoRepository planoRepository,
-                             IdGeneratoImpl idGenerato, DadosLoginRepository dadosLoginRepository, TypeAcessOfCreateAccount typeAcessOfCreateAccount, EncriptandoPassword encriptandoPassword) {
+                             IdGeneratoImpl idGenerato,
+                             DadosLoginRepository dadosLoginRepository,
+                             TypeAcessOfCreateAccount typeAcessOfCreateAccount,
+                             EncriptandoPassword encriptandoPassword,
+                             VerifyLogin verifyLogin) {
         this.clientesRepository = clientesRepository;
         this.notificationClientInsert = notificationClientInsert;
         this.planoRepository = planoRepository;
@@ -46,6 +52,7 @@ public class AddClienteService {
         this.dadosLoginRepository = dadosLoginRepository;
         this.typeAcessOfCreateAccount = typeAcessOfCreateAccount;
         this.encriptandoPassword = encriptandoPassword;
+        this.verifyLogin = verifyLogin;
     }
 
     @SuppressWarnings("null")
@@ -145,7 +152,11 @@ public class AddClienteService {
         DadosLogin dadosLogin = new DadosLogin();
         dadosLogin.setIdCliente(clientes.getId());
         dadosLogin.setId(idGenerato.generateId("cliente"));
+
         dadosLogin.setLogin(clientesDto.getLogin());
+
+        String typeLogin = verifyLogin.verifyLogin(clientesDto.getLogin());
+        dadosLogin.setTypeLogin(typeLogin);
 
         String convertedId = clientes.getId().toString();
         dadosLogin.setTypeAcess(typeAcessOfCreateAccount.getType(convertedId));

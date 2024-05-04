@@ -28,5 +28,7 @@ public class DadosLogin {
     @Column(name = "idCliente")
     private Long idCliente;
 
+    @Column(name = "typeLogin")
+    private String TypeLogin;
 
 }
