@@ -1,6 +1,5 @@
 package org.example.hotel_reservation_system.dto.Cliente;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -88,9 +87,15 @@ public class ClientesDto implements Serializable {
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
 
         DadosLogin dadosLogin = entity.getDadosLogin();
-        String login = dadosLogin.getLogin();
-        String password = dadosLogin.getPassword();
-        String typeAcess = dadosLogin.getTypeAcess();
+        String login = null;
+        String password = null;
+        String typeAcess = null;
+
+        if (dadosLogin != null) {
+            login = dadosLogin.getLogin();
+            password = dadosLogin.getPassword();
+            typeAcess = dadosLogin.getTypeAcess();
+        }
 
         if (entity.getStatus().equals(StatusEnum.INATIVO) || entity.getStatus().equals(StatusEnum.DESATIVADO)){
             return new ClientesDto(

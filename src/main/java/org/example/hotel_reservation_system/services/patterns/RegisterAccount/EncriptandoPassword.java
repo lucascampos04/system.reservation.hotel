@@ -1,7 +1,7 @@
 package org.example.hotel_reservation_system.services.patterns.RegisterAccount;
 
-import org.example.hotel_reservation_system.dto.Cliente.ClientesDto;
-import org.example.hotel_reservation_system.model.DadosLogin.DadosLogin;
+import org.example.hotel_reservation_system.services.patterns.PlansValues.MainAplicationValues;
+import org.example.hotel_reservation_system.services.patterns.Regex.MainRegexApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,14 @@ public class EncriptandoPassword implements IEncriptandoPassword {
 
     @Override
     public String encriptarPassword(String password) {
+        MainRegexApplication.PasswordRegex passwordRegex = new MainRegexApplication.PasswordRegex();
+
+        String passwordValidationMessage = passwordRegex.applyRegex(password);
+
+        if (passwordValidationMessage != null) {
+            throw new IllegalArgumentException(passwordValidationMessage);
+        }
+
         String typeAcessCliente = "CLIENTE";
         String typeAcessFuncionario = "FUNCIONARIO";
 

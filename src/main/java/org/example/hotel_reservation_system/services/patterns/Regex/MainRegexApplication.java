@@ -23,6 +23,17 @@ public class MainRegexApplication {
         }
     }
 
+    public static class PasswordRegex implements IRegexStrategy {
+        @Override
+        public String applyRegex(String password) {
+            String passwordRegex = "\\S+";
+            if (password == null || !password.matches(passwordRegex)) {
+                return "Senha inválida: Não deve conter espaços em branco.";
+            }
+            return null;
+        }
+    }
+
     public static class CepRegex implements IRegexStrategy {
         @Override
         public String applyRegex(String cep) {
