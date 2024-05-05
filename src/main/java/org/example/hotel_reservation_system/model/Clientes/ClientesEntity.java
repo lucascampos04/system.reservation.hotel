@@ -67,7 +67,7 @@ public class ClientesEntity{
     private PlanoEntity plano;
 
     @OneToOne
-    @JoinColumn(name = "dados_login")
+    @JoinColumn(name = "dados_login_id")
     private DadosLogin dadosLogin;
 
     @JsonIgnore

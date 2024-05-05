@@ -159,7 +159,7 @@ public class AddClienteService {
         dadosLogin.setTypeLogin(typeLogin);
 
         String convertedId = clientes.getId().toString();
-        dadosLogin.setTypeAcess(typeAcessOfCreateAccount.getType(convertedId));
+        dadosLogin.setTypeAccess(typeAcessOfCreateAccount.getType(convertedId));
 
         String password = clientesDto.getPassword();
 

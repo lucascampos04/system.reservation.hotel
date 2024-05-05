@@ -22,6 +22,7 @@ public class PlanoEntity{
 
     @OneToOne(mappedBy = "plano")
     private ClientesEntity cliente;
+
     public PlanoEntity(){
 
     }

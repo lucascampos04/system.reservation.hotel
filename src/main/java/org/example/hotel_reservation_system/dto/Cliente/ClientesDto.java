@@ -64,6 +64,7 @@ public class ClientesDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String plano;
 
+    // Dados de login
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String login;
 
@@ -73,9 +74,8 @@ public class ClientesDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String typeAcess;
 
-    private Map<String, String> updates;
-
-    public ClientesDto() {}
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String typeLogin;
 
     public static ClientesDto fromEntity(ClientesEntity entity) {
         if (entity == null) {
@@ -86,16 +86,11 @@ public class ClientesDto implements Serializable {
         Double planoValor = (plano != null) ? plano.getValor() : null;
         String planoNome = (plano != null) ? String.valueOf(plano.getPlano()) : null;
 
-        DadosLogin dadosLogin = entity.getDadosLogin();
-        String login = null;
-        String password = null;
-        String typeAcess = null;
-
-        if (dadosLogin != null) {
-            login = dadosLogin.getLogin();
-            password = dadosLogin.getPassword();
-            typeAcess = dadosLogin.getTypeAcess();
-        }
+        // Dados de login
+        String login = entity.getDadosLogin() != null ? entity.getDadosLogin().getLogin() : null;
+        String password = entity.getDadosLogin() != null ? entity.getDadosLogin().getPassword() : null;
+        String typeAcess = entity.getDadosLogin() != null ? entity.getDadosLogin().getTypeAccess() : null;
+        String typeLogin = entity.getDadosLogin() != null ? entity.getDadosLogin().getTypeLogin() : null;
 
         if (entity.getStatus().equals(StatusEnum.INATIVO) || entity.getStatus().equals(StatusEnum.DESATIVADO)){
             return new ClientesDto(
@@ -124,7 +119,8 @@ public class ClientesDto implements Serializable {
                     planoNome,
                     login,
                     password,
-                    typeAcess
+                    typeAcess,
+                    typeLogin
             );
         }
     }
@@ -132,7 +128,7 @@ public class ClientesDto implements Serializable {
     public ClientesDto(Long id, String nome, String email, String cpf, String rg, String endereco, String cep,
                        String data_nascimento, String numero, String estado, String pais, StatusEnum status,
                        LocalDateTime data_registro, RolesEnum role, Double planoValor, Double planoValorAtivo,
-                       String plano, String login, String password, String typeAcess) {
+                       String plano, String login, String password, String typeAcess, String typeLogin) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -149,9 +145,10 @@ public class ClientesDto implements Serializable {
         this.role = role;
         this.planoValor = planoValor;
         this.plano = plano;
-        this.login = login;
+        this.login = login; // Adicionando os dados de login
         this.password = password;
         this.typeAcess = typeAcess;
+        this.typeLogin = typeLogin;
 
         if (status == StatusEnum.ATIVO) {
             this.planoValor = planoValorAtivo;
@@ -164,11 +161,6 @@ public class ClientesDto implements Serializable {
         this.status = status;
     }
 
-    public Map<String, String> getUpdates() {
-        return updates;
-    }
-
-    public void addUpdate(String columnName, String newValue) {
-        updates.put(columnName, newValue);
+    public ClientesDto() {
     }
 }

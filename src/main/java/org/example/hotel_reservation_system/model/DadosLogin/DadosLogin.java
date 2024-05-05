@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "dados_login")
-public class DadosLogin {
+public class DadosLogin{
     @Id
     @Column(name = "id")
     private Long id;
@@ -22,13 +22,13 @@ public class DadosLogin {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "typeAcess")
-    private String TypeAcess;
+    @Column(name = "type_acess")
+    private String typeAccess;
 
-    @Column(name = "idCliente")
+    @Column(name = "id_cliente")
     private Long idCliente;
 
-    @Column(name = "typeLogin")
-    private String TypeLogin;
+    @Column(name = "type_login")
+    private String typeLogin;
 
 }
