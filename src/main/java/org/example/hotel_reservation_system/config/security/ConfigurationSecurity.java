@@ -1,10 +1,9 @@
 package org.example.hotel_reservation_system.config.security;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,26 +11,31 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class ConfigurationSecurity {
+public class ConfigurationSecurity{
+
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    private JwtRequestFilter jwtRequestFilter;
+
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-        .withUser("admin").password("<PASSWORD>").roles("CLIENTE");
+                .withUser("admin")
+                .password(passwordEncoder().encode("<PASSWORD>")).roles("CLIENTE");
     }
-    
-    @SuppressWarnings("deprecation")
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtTokenUtil jwtTokenFilter) throws Exception {
         return httpSecurity
-        .csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeRequests(authorize -> authorize
-            .anyRequest().permitAll()
-        )
-        .build();
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll()
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
