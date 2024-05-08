@@ -41,3 +41,12 @@ select type_acess, id_cliente, login, password, type_login
 
 select * from plano_entity;
 select * from reservations;
+
+
+CREATE TABLE logs(
+    id SERIAL PRIMARY KEY,
+    login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message TEXT,
+    user_id int,
+    FOREIGN KEY (user_id) REFERENCES clientes(id)
+);

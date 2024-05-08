@@ -31,7 +31,7 @@ public class JwtTokenUtil {
                 .map(authority -> new SimpleGrantedAuthority((String) authority))
                 .collect(Collectors.toList());
     }
-    private String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
     }

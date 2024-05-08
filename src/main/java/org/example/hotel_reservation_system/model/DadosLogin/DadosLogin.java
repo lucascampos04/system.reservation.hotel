@@ -31,4 +31,7 @@ public class DadosLogin{
     @Column(name = "type_login")
     private String typeLogin;
 
+    @Column(name = "status_login")
+    private String statusLogin;
+
 }

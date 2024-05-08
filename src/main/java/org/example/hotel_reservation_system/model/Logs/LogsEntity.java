@@ -4,28 +4,29 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.hotel_reservation_system.model.Clientes.ClientesEntity;
+import org.example.hotel_reservation_system.model.Employees.EmployeesEntity;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "logs_entity")
+@Table(name = "logs")
 public class LogsEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "login")
-    private String login;
+    @Column(name = "login", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime login;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "date_login")
-    private LocalDateTime date_login;
+    @Column(name = "message")
+    private String message;
 
     @ManyToOne
-    private ClientesEntity clientesEntity;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private ClientesEntity clienteId;
+
+    @ManyToOne
+    @JoinColumn(name = "employees_id", referencedColumnName = "id")
+    private EmployeesEntity employeesId;
 }
