@@ -28,6 +28,7 @@ public class ClienteController {
     @PostMapping("/post/add/clientes")
     public ResponseEntity<String> cadastrarCliente(@RequestBody ClientesDto clientesDto){
         try{
+            System.out.println("A");
             return addClienteService.AdicionarCliente(clientesDto);
         } catch (Exception e){
             e.printStackTrace();

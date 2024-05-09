@@ -50,3 +50,8 @@ CREATE TABLE logs(
     user_id int,
     FOREIGN KEY (user_id) REFERENCES clientes(id)
 );
+
+delete from clientes;
+delete from dados_login;
+delete from employees
+
